@@ -1,0 +1,34 @@
+/*!
+ * Start Bootstrap - Busines Frontpage (https://startbootstrap.com/template-overviews/business-frontpage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
+ */
+/* body {
+  padding-top: 56px;
+} */
+
+.header {
+	background-color: #030905;
+}
+
+.primary {
+	background-color: #0A2014;
+}
+
+.primary-neutral {
+	background-color: #0b2618;
+}
+
+.secondary {
+	background-color: #36b170;
+}
+
+body {
+	color: #E7DFDD;
+	background-color: #0A2014;
+}
+
+
+.card {
+	color: #030905;
+}
