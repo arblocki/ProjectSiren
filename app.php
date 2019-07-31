@@ -71,7 +71,7 @@
         		<div class="card h-100">
           			<div class="card-body">
 		    			<!-- Playlists category -->
-						<div class="playlists-button">
+					<div class="playlists-button">
 			    			<a data-toggle="collapse" data-target="#collapse1"><h5>Playlists</h5></a>
 		    			</div>
 		    			<div id="collapse1" class="collapse">
@@ -82,11 +82,33 @@
 			  				</ul>
 		    			</div>
 			
-			<!-- Top Artists -->
+					<!-- Top Artists -->
+					<div class="playlists-button">
+					    <a data-toggle="collapse" data-target="#collapse2"><h5>Top Artists</h5></a>
+					</div>
+					<div id="collapse2" class="collapse">
+						<ul class="list-group">
+						<li class="list-group-item">Tyler, The Creator</li>
+						<li class="list-group-item">BROCKHAMPTON</li>
+						<li class="list-group-item">MF DOOM</li>
+						</ul>
+					</div>
+
+					<!-- Top Songs -->
+					<div class="playlists-button">
+					    <a data-toggle="collapse" data-target="#collapse3"><h5>Top Songs</h5></a>
+					</div>
+					<div id="collapse3" class="collapse">
+						<ul class="list-group">
+						<li class="list-group-item">NEW MAGIC WAND</li>
+						<li class="list-group-item">STUPID</li>
+						<li class="list-group-item">BLEACH</li>
+						<li class="list-group-item">Crime Pays</li>
+						<li class="list-group-item">Meat Grinder</li>
+						</ul>
+					</div>
 			
-			<!-- Top Songs -->
-			
-			<!-- Recently Played Songs -->
+					<!-- Recently Played Songs -->
 			
 		  			</div>
         		</div>
