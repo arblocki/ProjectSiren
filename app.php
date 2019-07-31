@@ -33,7 +33,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="author" content="Andrew Blocki">
 
 	<title>Project Siren</title>
 
@@ -166,6 +166,27 @@
 			  
 			  				<label for="dance">Danceability</label><br>
 			  				<input type="range" class="slide w-100" id="dance">
+
+							<label for="energy">Energy</label><br>
+							<input type="range" class="slide w-100" id="energy">
+
+							<label for="instrument">Instrumentalness</label><br>
+							<input type="range" class="slide w-100" id="instrument">
+
+							<label for="liveness">Liveness</label><br>
+							<input type="range" class="slide w-100" id="liveness">
+
+							<label for="loudness">Loudness</label><br>
+							<input type="range" class="slide w-100" id="loudness">
+
+							<label for="speech">Speechiness</label><br>
+							<input type="range" class="slide w-100" id="speech">
+
+							<label for="tempo">Tempo</label><br>
+							<input type="range" class="slide w-100" id="tempo">
+
+							<label for="valence">Valence</label><br>
+							<input type="range" class="slide w-100" id="valence">
 						</div>
           			</div>
         		</div>
@@ -181,57 +202,51 @@
   	<!-- Footer -->
   	<footer class="py-5 primary-neutral">
     	<div class="container">
-    		<p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+    		<p class="m-0 text-center text-white">Copyright &copy; Project Siren 2019</p>
     	</div>
       <!-- /.container -->
     </footer>
+	
+	<script type="text/javascript">
+		<!-- AJAX for loading playlists and other songs lists -->
+		
+		<!-- Get track data for a given playlist -->
+		function getTracks(playlistID) {
+			if ($.active > 0) { 
+				xmlhttp.abort();
+			}
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					handleResponse(this.responseTest);
+				}
+			};
+			xmlhttp.open("GET", "analyzePlaylist.php?id=" + playlistID, true); // Returns json encoded object
+			xmlhttp.send();
+		}
+
+		function handleResponse(jsonObject) {
+			
+		}
+		
+		<!-- jQuery for audio feature sliders, key songs, etc. -->
+		$(document).ready(function(){
+			
+			<!-- Check marks for audio feature calculation -->
+			$('.audioFeat').click(function(){
+				if($(this).prop("checked") == true){
+					alert("Checkbox is checked.");
+					// Add this song's audio features to the averages
+				} else {
+					alert("Checkbox is unchecked.");
+					// Take out this song's audio features from the averages
+				}
+			});
+		});
+	</script>
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-
-	<!-- Original Page code -->
-	<!--
-	<div class="select">
-		<div class="list">
-			<?php // Print playlist names 
-				$index //= 0;
-				//foreach ($playlists as $pl) {
-					//echo "<a href='#items' class='li' id='".$index."'>".$pl->name."</a><br>";
-					//++$index;
-				//}
-			?>
-		</div>
-	</div>
-
-	<div class="view">
-		<div id="items">
-
-		</div>
-	</div>
-
-	<div class="stats">
-
-	</div> -->
-
-	<script>
-		
-		/*$(document).ready(function() {
-			var jsPlaylists = <?php //echo json_encode($playlists); ?>;
-
-			// When list item is clicked, update viewer 
-			$('.li').click(function(event) {
-				var index = this.id;
-				var pl = jsPlaylists[index];
-				window.console && console.log('Printing playlist '.index); 
-				$('#items').empty();
-				$('#items').append(
-					JSON.stringify(pl, null, 2)
-				);
-			});
-		
-		});*/
-
-	</script>
 </body>
