@@ -20,11 +20,11 @@
 
 	// Test out API methods to your heart's desire 
 
-	//$array = array( '7lW2HbFRh65PMz82J7mPnb' );
-	//$audioFeatures = $api->getAudioFeatures('7lW2HbFRh65PMz82J7mPnb');
-	//print("<pre>".print_r($audioFeatures, true)."</pre>");
+	$array = array( '7lW2HbFRh65PMz82J7mPnb' );
+	$audioFeatures = $api->getAudioFeatures('7lW2HbFRh65PMz82J7mPnb');
+	print("<pre>".print_r($audioFeatures, true)."</pre>");
 
-	$test = $api->getMyPlaylists()->items[0]->id;
-	$analysis = analyzePlaylist($api, $test);
+	//$test = getPlaylists($api, 50, 0);//->items[0]->id;
+	//$analysis = analyzePlaylist($api, $test);
 
-	print("<pre>".print_r($analysis, true)."</pre>");
+	//print("<pre>".print_r($test, true)."</pre>");
