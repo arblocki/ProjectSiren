@@ -280,6 +280,7 @@
 	}
 
 	function updateFeatures(json) {
+		audioFeatureTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 		var numSongs = json.length;
 		for (var i = 0; i < json.length; i++) {
 		    var track = json[i];
@@ -298,15 +299,15 @@
 		// TODO: MAYBE REVERSE THIS PART SO THAT SLIDERS GET SET FIRST  ??? 
 
 		// Set numerical values to their new values
-		$('#acoustic-value').html(+(audioFeatureTotals[0] / numSongs).toFixed(6));
-		$('#dance-value').html(+(audioFeatureTotals[1] / numSongs).toFixed(6));
-		$('#energy-value').html(+(audioFeatureTotals[2] / numSongs).toFixed(6));
-		$('#instrument-value').html(+(audioFeatureTotals[3] / numSongs).toFixed(6));
-		$('#liveness-value').html(+(audioFeatureTotals[4] / numSongs).toFixed(6));
-		$('#loudness-value').html(+(audioFeatureTotals[5] / numSongs).toFixed(6));
-		$('#speech-value').html(+(audioFeatureTotals[6] / numSongs).toFixed(6));
-		$('#tempo-value').html(+(audioFeatureTotals[7] / numSongs).toFixed(6));
-		$('#valence-value').html(+(audioFeatureTotals[8] / numSongs).toFixed(6));
+		$('#acoustic-value').html( +((audioFeatureTotals[0] / numSongs) * 100).toFixed(6) );
+		$('#dance-value').html( +((audioFeatureTotals[1] / numSongs) * 100).toFixed(6) );
+		$('#energy-value').html( +((audioFeatureTotals[2] / numSongs) * 100).toFixed(6) );
+		$('#instrument-value').html( +((audioFeatureTotals[3] / numSongs) * 100).toFixed(6) );
+		$('#liveness-value').html( +((audioFeatureTotals[4] / numSongs) * 100).toFixed(6) );
+		$('#loudness-value').html( +(audioFeatureTotals[5] / numSongs).toFixed(6) );
+		$('#speech-value').html( +((audioFeatureTotals[6] / numSongs) * 100).toFixed(6) );
+		$('#tempo-value').html( +(audioFeatureTotals[7] / numSongs).toFixed(6) );
+		$('#valence-value').html( +((audioFeatureTotals[8] / numSongs) * 100).toFixed(6) );
 		
 		// Set sliders to their new values
 		$('#acoustic').attr('value', $('#acoustic-value').html());
