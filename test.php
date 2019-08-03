@@ -24,7 +24,7 @@
 	$audioFeatures = $api->getAudioFeatures('7lW2HbFRh65PMz82J7mPnb');
 	print("<pre>".print_r($audioFeatures, true)."</pre>");
 
-	//$test = getPlaylists($api, 50, 0);//->items[0]->id;
-	//$analysis = analyzePlaylist($api, $test);
+	/*$test = getPlaylists($api, 50, 0);//->items[0]->id;
+	$analysis = analyzePlaylist($api, $test);
 
-	//print("<pre>".print_r($test, true)."</pre>");
+	print("<pre>".print_r($test, true)."</pre>");*/
