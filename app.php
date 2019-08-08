@@ -167,11 +167,11 @@
 		        <div class="key-tracks">
 		          	<h5>Key Tracks</h5>
 		          	<div class="row icons">
-		            	<div class="track"><img class="track-icon" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" src="images/placeholder.jpg"></div>
+		            	<div class="track"><img class="track-icon" id="track-icon0" src="images/placeholder.jpg"></div>
+		            	<div class="track"><img class="track-icon" id="track-icon1" src="images/placeholder.jpg"></div>
+		            	<div class="track"><img class="track-icon" id="track-icon2" src="images/placeholder.jpg"></div>
+		            	<div class="track"><img class="track-icon" id="track-icon3" src="images/placeholder.jpg"></div>
+		            	<div class="track"><img class="track-icon" id="track-icon4" src="images/placeholder.jpg"></div>
 		          	</div>
 		          	<div class="detail">
 		            	<div class="detail-blurb">
@@ -256,20 +256,24 @@
 	
 	var audioFeatureTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 	var numSongs = 1;
-	var json;
+	var json = [];
+	var numKeyTracks = 0;
+	var keyTracks = new Array();	
+	// TODO: Make associative array with key-value pairs: (trackID, xmlhttp)
+	// 		If user unchecks a star and the request for the icon is still active, it will abort it
 
 	// AJAX for loading playlists and other songs lists
 	
 	// Get track data for a given playlist
 	function getTracks(playlistID) {
-		if ($.active > 0) { 
+		/*if ($.active > 0) { 
 			xmlhttp.abort();
-		}
+		}*/
 		$('#loading-overlay').css("display", "block");
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				var json = JSON.parse(this.responseText);
+				json = JSON.parse(this.responseText);
 				handleResponse(json);
 				updateFeatures(json);
 			}
@@ -290,8 +294,8 @@
 					&nbsp;</label></div></td> \
 				  	<td>'+track.track+'</td><td>'+track.artist+'</td> \
 				  	<td><div class="star_container"> \
-              		<img class="star" id="star'+i+'" src="images/star_empty.png" onclick="toggleStar(\'star'+i+
-              		'\')"></div></td></tr>'
+              		<img class="star" id="star'+i+'" src="images/star_empty.png" onclick="toggleStar('+i+ 
+              		')"></div></td></tr>' 
 		    );
 		}
 		$('#loading-overlay').css("display", "none");
@@ -372,15 +376,54 @@
     	});
 	});
 
-	function toggleStar(starID) {
-    	if ($('#'+starID).attr("src") == 'images/star_empty.png') {
-      		$('#'+starID).attr("src", "images/star_filled.png");
-      		// Call function to add song to key tracks 
-    	} else {
-      		$('#'+starID).attr("src", "images/star_empty.png");
-      		// Call function to delete song from key tracks
-    	}
+	function toggleStar(songIndex) {
+    	if (numKeyTracks == 5) {
+			alert('Maximum 5 key tracks can be selected.');
+		} else {
+			if ($('#star'+songIndex).attr("src") == 'images/star_empty.png') {
+				$('#star'+songIndex).attr("src", "images/star_filled.png");
+				++numKeyTracks;
+				window.console && console.log('key tracks: '+numKeyTracks);
+				// Call function to add song to key tracks 
+				var track = json[songIndex];
+				addKeyTrack(track);
+			} else {
+				$('#star'+songIndex).attr("src", "images/star_empty.png");
+				--numKeyTracks;
+				window.console && console.log('key tracks: '+numKeyTracks);
+				// Call function to delete song from key tracks
+				var track = json[songIndex];
+				deleteKeyTrack(track.id);
+			}
+		}
   	}
+
+  	function addKeyTrack(track) {
+		// TODO: Make trimmed track object with id, name, artist, album 
+		window.console && console.log(track);
+		keyTracks.push(track.trackID); // TODO: change push from id to object 
+		// Fetch track art - Local storage method
+		var imageLink = track.image;
+		$( '#track-icon'+(numKeyTracks-1)).attr('src', imageLink);
+	}
+
+
+	
+	function deleteKeyTrack(trackID) { 
+		// Find index within keyTracks and erase it 
+		var index = keyTracks.indexOf(trackID);
+		keyTracks.splice(index, 1);
+		// Move icons on the right of the deleted index to their new position 
+		var right = index + 1;
+		while (right <= numKeyTracks) {
+			$( '#track-icon'+ index ).attr('src', $( '#track-icon'+ right ).attr('src') );
+			++index;
+			++right;
+		}
+		$( '#track-icon'+ index ).attr('src', 'images/placeholder.jpg');
+		
+	}
+
 </script>
 
 <!-- Bootstrap core JavaScript -->
