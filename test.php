@@ -20,12 +20,12 @@
 
 	// Test out API methods to your heart's desire 
 
-	/*$array = array( '7lW2HbFRh65PMz82J7mPnb' );
+	$array = array( '7lW2HbFRh65PMz82J7mPnb' );
 	$audioFeatures = $api->getAudioFeatures('7lW2HbFRh65PMz82J7mPnb');
-	print("<pre>".print_r($audioFeatures, true)."</pre>");*/
+	print("<pre>".print_r($audioFeatures, true)."</pre>");
 
-	$test = $api->getTrack('33omqR79fIXhaqdO4kQFAz')->album->images[1]->url;
+	//$test = $api->getTrack('33omqR79fIXhaqdO4kQFAz');
 	//$analysis = analyzePlaylist($api, $test);
 
 	//print("<pre>".print_r($test, true)."</pre>");
-	echo '<img src="'.$test.'">';
+	

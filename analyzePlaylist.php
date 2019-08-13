@@ -41,6 +41,8 @@
 								'trackID' => $currentTrack->id,
 								'artist' => $currentTrack->artists[0]->name,
 								'artistID' => $currentTrack->artists[0]->id,
+								'album' => $currentTrack->album->name,
+								'albumID' => $currentTrack->album->id,
 								'image' => $currentTrack->album->images[1]->url,
 								'popularity' => $currentTrack->popularity,
 								// Audio features

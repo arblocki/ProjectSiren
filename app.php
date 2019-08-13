@@ -6,12 +6,37 @@
 
 	include 'func.php';
 
+	// Check if form has been submitted to get recommendations 
+	session_start();
+	if (isset($_POST['songID0'])) {
+		$_SESSION['id0'] = $_POST['songID0'];
+		$_SESSION['numIDs'] = 1;
+		for ($i = 1; $i < 5; ++$i) {
+			if (isset($_POST['songID'.$i]) && $_POST['songID'.$i] != '') {
+				$_SESSION['id'.$i] = $_POST['songID'.$i];
+				++$_SESSION['numIDs'];
+			}
+		}
+
+		$_SESSION['acoustic'] = ($_POST['acoustic'] / 100);
+		$_SESSION['dance'] = ($_POST['dance'] / 100);
+		$_SESSION['energy'] = ($_POST['energy'] / 100);
+		$_SESSION['instrument'] = ($_POST['instrument'] / 100);
+		$_SESSION['liveness'] = ($_POST['liveness'] / 100);
+		$_SESSION['loudness'] = $_POST['loudness'];
+		$_SESSION['speech'] = ($_POST['speech'] / 100);
+		$_SESSION['tempo'] = $_POST['tempo'];
+		$_SESSION['valence'] = ($_POST['valence'] / 100);
+
+		header("Location: recommendations.php");
+		return;
+	}
+
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 
 	// Fetch the saved access token from $_SESSION
-	session_start();
 	$stmt = $pdo->query('SELECT * FROM users WHERE username = '.$_SESSION['id']);
-	//unset($_SESSION['id']);
+	
 	$row = $stmt->fetch();
 
 	$session->refreshAccessToken($row['refresh']);
@@ -139,18 +164,7 @@
 					<th style="text-align: center;">Key Track</th>
 	  			</thead>
 	  			<tbody>
-					<tr>
-			  			<td><div class="form-check">
-							<label class="form-check-label" style="color: #FFFFFF;">
-				  			<input type="checkbox" class="form-check-input" value="" checked>&nbsp;
-							</label>
-			  			</div></td>
-			  			<td>Guru</td>
-			  			<td>Coast Modern</td>
-			  			<td><div class="star_container">
-              				<img class="star" id="star1" src="images/star_empty.png" onclick="toggleStar('star1')">
-              			</div></td>
-					</tr>
+	  				
 	  			</tbody>
 				</table>
   			</div>
@@ -167,11 +181,36 @@
 		        <div class="key-tracks">
 		          	<h5>Key Tracks</h5>
 		          	<div class="row icons">
-		            	<div class="track"><img class="track-icon" id="track-icon0" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" id="track-icon1" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" id="track-icon2" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" id="track-icon3" src="images/placeholder.jpg"></div>
-		            	<div class="track"><img class="track-icon" id="track-icon4" src="images/placeholder.jpg"></div>
+		            	<div class="track">
+		            		<img class="track-icon" id="track-icon0" src="images/placeholder.jpg" data-filled="0">
+		            		<div class="overlay">
+		            			<img class="icon-x" id="icon0" src="images/redX.png">
+		            		</div>
+		            	</div>
+		            	<div class="track">
+		            		<img class="track-icon" id="track-icon1" src="images/placeholder.jpg" data-filled="0">
+		            		<div class="overlay">
+		            			<img class="icon-x" id="icon1" src="images/redX.png">
+		            		</div>
+		            	</div>
+		            	<div class="track">
+		            		<img class="track-icon" id="track-icon2" src="images/placeholder.jpg" data-filled="0">
+		            		<div class="overlay">
+		            			<img class="icon-x" id="icon2" src="images/redX.png">
+		            		</div>
+		            	</div>
+		            	<div class="track">
+		            		<img class="track-icon" id="track-icon3" src="images/placeholder.jpg" data-filled="0">
+		            		<div class="overlay">
+		            			<img class="icon-x" id="icon3" src="images/redX.png">
+		            		</div>
+		            	</div>
+		            	<div class="track">
+		            		<img class="track-icon" id="track-icon4" src="images/placeholder.jpg" data-filled="0">
+		            		<div class="overlay">
+		            			<img class="icon-x" id="icon4" src="images/redX.png">
+		            		</div>
+		            	</div>
 		          	</div>
 		          	<div class="detail">
 		            	<div class="detail-blurb">
@@ -233,6 +272,30 @@
 					<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
 					oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
 				</div>
+
+				<!-- Generate Playlist button -->
+				<h5>Generate New Playlist!</h5>
+				<button onclick="generatePlaylist()">Generate</button>
+
+				<!-- Hidden form used for playlist generation -->
+				<form id="hidden-form" method="POST">
+					<!-- song IDs -->
+					<input type="hidden" id="songID0" name="songID0" value="">
+					<input type="hidden" id="songID1" name="songID1" value="">
+					<input type="hidden" id="songID2" name="songID2" value="">
+					<input type="hidden" id="songID3" name="songID3" value="">
+					<input type="hidden" id="songID4" name="songID4" value="">
+					<!-- Audio features -->
+					<input type="hidden" id="form-acoustic" name="acoustic" value="">
+					<input type="hidden" id="form-dance" name="dance" value="">
+					<input type="hidden" id="form-energy" name="energy" value="">
+					<input type="hidden" id="form-instrument" name="instrument" value="">
+					<input type="hidden" id="form-liveness" name="liveness" value="">
+					<input type="hidden" id="form-loudness" name="loudness" value="">
+					<input type="hidden" id="form-speech" name="speech" value="">
+					<input type="hidden" id="form-tempo" name="tempo" value="">
+					<input type="hidden" id="form-valence" name="valence" value="">
+				</form>
   			</div>
 		</div>
 		</div>
@@ -366,18 +429,39 @@
 			}
 		});
 
-		$('.track-icon').mouseenter(function() {
-    		$('.detail-blurb').css('display', 'none');
-    		$('.track-detail').css('display', 'block');
+		$('.track').mouseenter(function() {
+			var filled = $(this).find('.track-icon').attr('data-filled');
+			if (filled == '1') {
+				$(this).find('.track-icon').css('opacity', 0.6);
+				$(this).find('.overlay').css('opacity', 0.9);
+
+				var index = $(this).find('.track-icon').attr('id').substring(10);
+	    		$('.detail-blurb').css('display', 'none');
+	    		$('.track-detail').css('display', 'block');
+	    		$('#track-title').html(keyTracks[index].track);
+	    		$('#key-artist').html(keyTracks[index].artist);
+	    		$('#key-album').html(keyTracks[index].album);
+	    	}
     	});
-    	$('.track-icon').mouseleave(function() {
+    	$('.track').mouseleave(function() {
+    		$(this).find('.track-icon').css('opacity', 1);
+			$(this).find('.overlay').css('opacity', 0);
+
       		$('.detail-blurb').css('display', 'block');
       		$('.track-detail').css('display', 'none');
+    	});
+
+    	$('.icon-x').click(function() {
+    		var index = $(this).attr('id').substring(4);
+    		var ID = keyTracks[index].trackID;
+    		console.log('deleting index '+index+', songID is '+ID);
+    		deleteKeyTrack(ID);
+    		checkForStar(ID);
     	});
 	});
 
 	function toggleStar(songIndex) {
-    	if (numKeyTracks == 5) {
+    	if (numKeyTracks == 5 && $('#star'+songIndex).attr("src") == 'images/star_empty.png') {
 			alert('Maximum 5 key tracks can be selected.');
 		} else {
 			if ($('#star'+songIndex).attr("src") == 'images/star_empty.png') {
@@ -386,14 +470,14 @@
 				window.console && console.log('key tracks: '+numKeyTracks);
 				// Call function to add song to key tracks 
 				var track = json[songIndex];
-				addKeyTrack(track);
+				addKeyTrack(track, songIndex);
 			} else {
 				$('#star'+songIndex).attr("src", "images/star_empty.png");
-				--numKeyTracks;
-				window.console && console.log('key tracks: '+numKeyTracks);
+				window.console && console.log('key tracks: '+numKeyTracks-1);
 				// Call function to delete song from key tracks
 				var track = json[songIndex];
-				deleteKeyTrack(track.id);
+				//console.log('track: '+);
+				deleteKeyTrack(track.trackID);
 			}
 		}
   	}
@@ -401,27 +485,78 @@
   	function addKeyTrack(track) {
 		// TODO: Make trimmed track object with id, name, artist, album 
 		window.console && console.log(track);
-		keyTracks.push(track.trackID); // TODO: change push from id to object 
+		keyTracks.push(track); // TODO: change push from id to object 
 		// Fetch track art - Local storage method
 		var imageLink = track.image;
 		$( '#track-icon'+(numKeyTracks-1)).attr('src', imageLink);
+		$( '#track-icon'+(numKeyTracks-1)).attr('data-filled', '1');
 	}
 
 
 	
 	function deleteKeyTrack(trackID) { 
 		// Find index within keyTracks and erase it 
-		var index = keyTracks.indexOf(trackID);
-		keyTracks.splice(index, 1);
-		// Move icons on the right of the deleted index to their new position 
-		var right = index + 1;
-		while (right <= numKeyTracks) {
-			$( '#track-icon'+ index ).attr('src', $( '#track-icon'+ right ).attr('src') );
-			++index;
-			++right;
+		var index = findKeyTrackIndex(trackID);
+		if (index != -1) {
+			//console.log('keyTracks: '+keyTracks);
+			//console.log('searching for '+trackID);
+			//window.console && console.log('Deleting key track at index '+index);
+			--numKeyTracks;
+			keyTracks.splice(index, 1);
+			// Move icons on the right of the deleted index to their new position 
+			var right = index + 1;
+			while (right <= numKeyTracks) {
+				$( '#track-icon'+ index ).attr('src', keyTracks[index].image );
+				//$( '#track-icon'+ index ).attr('data-JSONIndex', $( '#track-icon'+ right ).attr('data-JSONIndex') );
+				++index;
+				++right;
+			}
+			$( '#track-icon'+ index ).attr('src', 'images/placeholder.jpg');
+			$( '#track-icon'+ index ).attr('data-filled', '0');
+		} else {
+			console.log('trackID not found!');
 		}
-		$( '#track-icon'+ index ).attr('src', 'images/placeholder.jpg');
-		
+	}
+
+	function findKeyTrackIndex(trackID) {
+		for (var i = 0; i < keyTracks.length; ++i) {
+			if (keyTracks[i].trackID == trackID) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	function checkForStar(trackID) {
+		for (var i = 0; i < json.length; ++i) {
+			if (json[i].trackID == trackID && $('#star'+i).attr('src') == "images/star_filled.png") {
+				$('#star'+i).attr('src', 'images/star_empty.png');
+			}
+		}
+	}
+
+	function generatePlaylist() {
+		if (keyTracks.length == 0) {
+			alert('At least one key track must be selected to generate a new playlist.');
+		} else {
+			// Set form values to interactive values
+			$('#songID0').attr('value', keyTracks[0].trackID);
+			for (var i = 1; i < keyTracks.length; ++i) {
+				$('#songID'+i).attr('value', keyTracks[i].trackID);
+			}
+
+			$('#form-acoustic').attr('value', $('#acoustic-value').html() );
+			$('#form-dance').attr('value', $('#dance-value').html() );
+			$('#form-energy').attr('value', $('#energy-value').html() );
+			$('#form-instrument').attr('value', $('#instrument-value').html() );
+			$('#form-liveness').attr('value', $('#liveness-value').html() );
+			$('#form-loudness').attr('value', $('#loudness-value').html() );
+			$('#form-speech').attr('value', $('#speech-value').html() );
+			$('#form-tempo').attr('value', $('#tempo-value').html() );
+			$('#form-valence').attr('value', $('#valence-value').html() );
+			// Submit
+			$('#hidden-form').submit();
+		}
 	}
 
 </script>
