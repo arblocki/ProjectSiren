@@ -24,16 +24,113 @@
 <body>
 
 <!-- Header -->
-<header class="header py-5 mb-5">
+<header class="header mb-5">
 <div class="container h-100">
-		<div class="row h-100 align-items-left">
+	<div class="row h-100 align-items-left">
 		<div class="col-lg-12 pl-50">
   			<h1 class="display-4 mt-5 mb-2">Project Siren</h1>
   			<p class="lead mb-5">Discover new music.</p>
 		</div>
-		</div>
+	</div>
 </div>
+
+<!-- Navbar for mobile playlist tuning -->
+<!-- NEW -->
+<nav class="navbar navbar-light bg-light" id="mainnav">
+	<div class="container nav-head">	
+		<a class="navbar-brand nav-scroll" href="#" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			Tune Your Playlist
+		</a>
+		<button class="navbar-toggler nav-scroll" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+	<div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<div class="container playlist-tuner">
+			<div class="row">
+				<div class="col-lg-6 key-tracks">
+					<h5>Key Tracks</h5>
+					<div class="key-tracks">
+						<div class="row track">
+							<img class="track-icon" src="images/placeholder.jpg">
+							<div class="track-detail">
+								<strong class="track-title detail">Song Title</strong>
+								<p class="track-artist detail"> Artist - Album</p>
+							</div>
+						</div>
+						<div class="row track">
+							<img class="track-icon" src="images/placeholder.jpg">
+							<div class="track-detail">
+								<strong class="track-title detail">Song Title</strong>
+								<p class="track-artist detail"> Artist - Album</p>
+							</div>
+						</div>
+						<div class="row track">
+							<img class="track-icon" src="images/placeholder.jpg">
+							<div class="track-detail">
+								<strong class="track-title detail">Song Title</strong>
+								<p class="track-artist detail"> Artist - Album</p>
+							</div>
+						</div>
+						<div class="row track">
+							<img class="track-icon" src="images/placeholder.jpg">
+							<div class="track-detail">
+								<strong class="track-title detail">Song Title</strong>
+								<p class="track-artist detail"> Artist - Album</p>
+							</div>
+						</div>
+						<div class="row track">
+							<img class="track-icon" src="images/placeholder.jpg">
+							<div class="track-detail">
+								<strong class="track-title detail">Song Title</strong>
+								<p class="track-artist detail"> Artist - Album</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 mb-5">
+					<h5>Audio Features</h5>
+					<div class="feature-sliders">
+						<label for="acoustic">Acousticness</label>
+						<p class="feature-value" id="acoustic-value">50</p>
+						<input type="range" class="slide w-100" id="acoustic" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'acoustic')" onchange="showVal(this.value, 'acoustic')">
+		  
+						<label for="dance">Danceability</label>
+						<p class="feature-value" id="dance-value">50</p>
+						<input type="range" class="slide w-100" id="dance" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'dance')" onchange="showVal(this.value, 'dance')">
+
+						<label for="energy">Energy</label>
+						<p class="feature-value" id="energy-value">50</p>
+						<input type="range" class="slide w-100" id="energy" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'energy')" onchange="showVal(this.value, 'energy')">
+
+						<label for="instrument">Instrumentalness</label>
+						<p class="feature-value" id="instrument-value">50</p>
+						<input type="range" class="slide w-100" id="instrument" min="0" max="100" step="0.01"
+						oninput="showVal(this.value, 'instrument')" onchange="showVal(this.value, 'instrument')">
+
+						<label for="tempo">Tempo</label>
+						<p class="feature-value" id="tempo-value">135</p>
+						<input type="range" class="slide w-100" id="tempo" min="50" max="220" step="1"
+						oninput="showVal(this.value, 'tempo')" onchange="showVal(this.value, 'tempo')">
+
+						<label for="valence">Valence</label>
+						<p class="feature-value" id="valence-value">50</p>
+						<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+
+<!-- Navbar for mobile playlist tuning -->
+
 </header>
+
 
 <!-- Page Content -->
 <div class="container primary">
@@ -41,7 +138,7 @@
 <div class="row">
 
 		<!-- Left pane -->
-		<div class="col-lg-3 mb-5">
+		<div class="col-lg-4 mb-5">
 		<div class="card h-100">
   			<div class="card-body" id>
     			<!-- Playlists category -->
@@ -90,7 +187,7 @@
 		<!-- Left -->
 
 		<!-- Center pane -->
-		<div class="col-lg-6 mb-5">
+		<div class="col-lg-8 mb-5">
     	<div class="card h-100">
     		<div id="loading-overlay"></div>
       		<div class="card-body" id="center-card-body">
@@ -127,86 +224,8 @@
 		</div>
 		<!-- Center -->
 
-		<!-- Right pane -->
-		<div class="col-lg-3 mb-5">
-		<div class="card h-100">
-  			<div class="card-body">
-    			<h4 class="card-title">Tune your Playlist!</h4>
-				<!-- Siren Songs section -->
-				<div class="key-tracks">
-					<h5>Key Tracks</h5>
-					<div class="row icons">
-						<div class="track"><img class="track-icon" id="track-icon0" src="images/placeholder.jpg"></div>
-						<div class="track"><img class="track-icon" id="track-icon1" src="images/placeholder.jpg"></div>
-						<div class="track"><img class="track-icon" id="track-icon2" src="images/placeholder.jpg"></div>
-						<div class="track"><img class="track-icon" id="track-icon3" src="images/placeholder.jpg"></div>
-						<div class="track"><img class="track-icon" id="track-icon4" src="images/placeholder.jpg"></div>
-					</div>
-					<div class="detail">
-						<div class="detail-blurb">
-							<p>Add Key Tracks by clicking the star icons.</.p>
-						</div>
-						<div class="track-detail">
-							<strong><p id="track-title">Song Title</p></strong>
-							<p id="key-artist">Artist</p>
-							<p id="key-album">Album</p>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Audio Features section -->
-				<h5>Audio Features</h5>
-				<div class="feature-sliders">
-      				<label for="acoustic">Acousticness</label>
-      				<p class="feature-value" id="acoustic-value">50</p>
-	  				<input type="range" class="slide w-100" id="acoustic" min="0" max="100" step="0.1"
-	  				oninput="showVal(this.value, 'acoustic')" onchange="showVal(this.value, 'acoustic')">
-	  
-	  				<label for="dance">Danceability</label>
-	  				<p class="feature-value" id="dance-value">50</p>
-	  				<input type="range" class="slide w-100" id="dance" min="0" max="100" step="0.1"
-	  				oninput="showVal(this.value, 'dance')" onchange="showVal(this.value, 'dance')">
-
-					<label for="energy">Energy</label>
-					<p class="feature-value" id="energy-value">50</p>
-					<input type="range" class="slide w-100" id="energy" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'energy')" onchange="showVal(this.value, 'energy')">
-
-					<label for="instrument">Instrumentalness</label>
-					<p class="feature-value" id="instrument-value">50</p>
-					<input type="range" class="slide w-100" id="instrument" min="0" max="100" step="0.01"
-					oninput="showVal(this.value, 'instrument')" onchange="showVal(this.value, 'instrument')">
-
-					<label for="liveness">Liveness</label>
-					<p class="feature-value" id="liveness-value">50</p>
-					<input type="range" class="slide w-100" id="liveness" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'liveness')" onchange="showVal(this.value, 'liveness')">
-
-					<label for="loudness">Loudness</label>
-					<p class="feature-value" id="loudness-value">-20</p>
-					<input type="range" class="slide w-100" id="loudness" min="-40" max="0" step="0.1"
-					oninput="showVal(this.value, 'loudness')" onchange="showVal(this.value, 'loudness')">
-
-					<label for="speech">Speechiness</label>
-					<p class="feature-value" id="speech-value">50</p>
-					<input type="range" class="slide w-100" id="speech" min="0" max="100" step="0.01"
-					oninput="showVal(this.value, 'speech')" onchange="showVal(this.value, 'speech')">
-
-					<label for="tempo">Tempo</label>
-					<p class="feature-value" id="tempo-value">135</p>
-					<input type="range" class="slide w-100" id="tempo" min="50" max="220" step="1"
-					oninput="showVal(this.value, 'tempo')" onchange="showVal(this.value, 'tempo')">
-
-					<label for="valence">Valence</label>
-					<p class="feature-value" id="valence-value">50</p>
-					<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
-				</div>
-  			</div>
-		</div>
-		</div>
-		<!-- Right -->
-
+		<!-- NEW (no right panel) -->
+		
 </div>
 <!-- /.row -->
 
@@ -327,15 +346,27 @@
 			}
 		});
 		
-		$('.track-icon').mouseenter(function() {
-			$('.detail-blurb').css('display', 'none');
-			$('.track-detail').css('display', 'block');
-		});
-		$('.track-icon').mouseleave(function() {
-			$('.detail-blurb').css('display', 'block');
-			$('.track-detail').css('display', 'none');
+		<!-- NEW -->
+		var navpos = $('#mainnav').offset();
+		//console.log(navpos.top);
+		$(window).bind('scroll', function() {
+			if ($(window).scrollTop() > navpos.top && !$("#navbarNavDropdown").is(":visible") ) {
+				console.log('Fixing to top');
+				$('#mainnav').addClass('fixed-top');
+			} else {
+				console.log('Unfixing from top');
+				$('#mainnav').removeClass('fixed-top');
+			}
 		});
 		
+		$(".nav-scroll").click(function() {
+			if ( !$("#navbarNavDropdown").is(":visible") )
+				$('html,body').animate({
+					scrollTop: $("#navbarNavDropdown").offset().top},
+					'slow');
+		});
+		<!-- end NEW -->
+	
 	});
 	
 	function toggleStar(songIndex) {
@@ -355,7 +386,7 @@
 				window.console && console.log('key tracks: '+numKeyTracks);
 				// Call function to delete song from key tracks
 				var track = json[songIndex];
-				deleteKeyTrack(track->id);
+				deleteKeyTrack(track.id);
 			}
 		}
 	}
@@ -363,7 +394,7 @@
 	function addKeyTrack(track) {
 		// TODO: Make trimmed track object with id, name, artist, album 
 		
-		keyTracks.push(track->id); // TODO: change push from id to object 
+		keyTracks.push(track.id); // TODO: change push from id to object 
 		// Fetch track art 
 		var imageLink = '';
 		var artHttp = new XMLHttpRequest();
@@ -374,7 +405,7 @@
 				$( '.track-icon:eq('+keyTracks.length-1+')' ).attr('src', imageLink);
 			}
 		};
-		artHttp.open("GET", "getTrackArt.php?id=" + track->id, true); // Returns image link to art ??
+		artHttp.open("GET", "getTrackArt.php?id=" + track.id, true); // Returns image link to art ??
 		artHttp.send();
 	}
 	
@@ -402,4 +433,3 @@
 </body>
 
 </html>
-
