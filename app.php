@@ -85,6 +85,150 @@
 		</div>
 		</div>
 </div>
+
+<!-- Navbar for mobile playlist tuning -->
+<!-- NEW -->
+<nav class="navbar navbar-light bg-light" id="mainnav">
+	<div class="container nav-head">	
+		<a class="navbar-brand nav-scroll" href="#" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			Tune Your Playlist
+		</a>
+		<button class="navbar-toggler nav-scroll" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+	<div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<div class="container playlist-tuner">
+			<div class="row">
+				<div class="col-lg-6 key-tracks">
+					<h5>Key Tracks</h5>
+					<div class="key-tracks">
+						<div class="row track">
+							<div class="col-3 icon-wrapper">
+			            		<img class="track-icon" id="track-icon0" src="images/placeholder.jpg" data-filled="0">
+			            	</div>
+							<div class="col-9 track-detail">
+								<div class="track-text">
+									<strong class="track-title detail">Song Title</strong>
+									<p class="track-artist detail"> Artist - Album</p>
+								</div>
+								<img class="icon-x" id="icon0" src="images/redX.png">
+							</div>
+						</div>
+						<div class="row track">
+							<div class="col-3 icon-wrapper">
+			            		<img class="track-icon" id="track-icon1" src="images/placeholder.jpg" data-filled="0">
+			            	</div>
+							<div class="col-9 track-detail">
+								<div class="track-text">
+									<strong class="track-title detail">Song Title</strong>
+									<p class="track-artist detail"> Artist - Album</p>
+								</div>
+								<img class="icon-x" id="icon1" src="images/redX.png">
+							</div>
+						</div>
+						<div class="row track">
+							<div class="col-3 icon-wrapper">
+			            		<img class="track-icon" id="track-icon2" src="images/placeholder.jpg" data-filled="0">
+			            	</div>
+							<div class="col-9 track-detail">
+								<div class="track-text">
+									<strong class="track-title detail">Song Title</strong>
+									<p class="track-artist detail"> Artist - Album</p>
+								</div>
+								<img class="icon-x" id="icon2" src="images/redX.png">
+							</div>
+						</div>
+						<div class="row track">
+							<div class="col-3 icon-wrapper">
+			            		<img class="track-icon" id="track-icon3" src="images/placeholder.jpg" data-filled="0">
+			            	</div>
+							<div class="col-9 track-detail">
+								<div class="track-text">
+									<strong class="track-title detail">Song Title</strong>
+									<p class="track-artist detail"> Artist - Album</p>
+								</div>
+								<img class="icon-x" id="icon3" src="images/redX.png">
+							</div>
+						</div>
+						<div class="row track">
+							<div class="col-3 icon-wrapper">
+			            		<img class="track-icon" id="track-icon4" src="images/placeholder.jpg" data-filled="0">
+			            	</div>
+							<div class="col-9 track-detail">
+								<div class="track-text">
+									<strong class="track-title detail">Song Title</strong>
+									<p class="track-artist detail"> Artist - Album</p>
+								</div>
+								<img class="icon-x" id="icon4" src="images/redX.png">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 mb-5">
+					<h5>Audio Features</h5>
+					<div class="feature-sliders">
+						<label for="acoustic">Acousticness</label>
+						<p class="feature-value" id="acoustic-value">50</p>
+						<input type="range" class="slide w-100" id="acoustic" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'acoustic')" onchange="showVal(this.value, 'acoustic')">
+		  
+						<label for="dance">Danceability</label>
+						<p class="feature-value" id="dance-value">50</p>
+						<input type="range" class="slide w-100" id="dance" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'dance')" onchange="showVal(this.value, 'dance')">
+
+						<label for="energy">Energy</label>
+						<p class="feature-value" id="energy-value">50</p>
+						<input type="range" class="slide w-100" id="energy" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'energy')" onchange="showVal(this.value, 'energy')">
+
+						<label for="instrument">Instrumentalness</label>
+						<p class="feature-value" id="instrument-value">50</p>
+						<input type="range" class="slide w-100" id="instrument" min="0" max="100" step="0.01"
+						oninput="showVal(this.value, 'instrument')" onchange="showVal(this.value, 'instrument')">
+
+						<label for="tempo">Tempo</label>
+						<p class="feature-value" id="tempo-value">135</p>
+						<input type="range" class="slide w-100" id="tempo" min="50" max="220" step="1"
+						oninput="showVal(this.value, 'tempo')" onchange="showVal(this.value, 'tempo')">
+
+						<label for="valence">Valence</label>
+						<p class="feature-value" id="valence-value">50</p>
+						<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
+						oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
+					</div>
+
+					<!-- Generate Playlist button -->
+					<h5>Generate New Playlist!</h5>
+					<button onclick="generatePlaylist()">Generate</button>
+
+					<!-- Hidden form used for playlist generation -->
+					<form id="hidden-form" method="POST">
+						<!-- song IDs -->
+						<input type="hidden" id="songID0" name="songID0" value="">
+						<input type="hidden" id="songID1" name="songID1" value="">
+						<input type="hidden" id="songID2" name="songID2" value="">
+						<input type="hidden" id="songID3" name="songID3" value="">
+						<input type="hidden" id="songID4" name="songID4" value="">
+						<!-- Audio features -->
+						<input type="hidden" id="form-acoustic" name="acoustic" value="">
+						<input type="hidden" id="form-dance" name="dance" value="">
+						<input type="hidden" id="form-energy" name="energy" value="">
+						<input type="hidden" id="form-instrument" name="instrument" value="">
+						<input type="hidden" id="form-liveness" name="liveness" value="">
+						<input type="hidden" id="form-loudness" name="loudness" value="">
+						<input type="hidden" id="form-speech" name="speech" value="">
+						<input type="hidden" id="form-tempo" name="tempo" value="">
+						<input type="hidden" id="form-valence" name="valence" value="">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- Navbar for mobile playlist tuning -->
+
 </header>
 
 <!-- Page Content -->
@@ -92,8 +236,8 @@
 
 <div class="row">
 
-		<!-- Left pane -->
-		<div class="col-lg-3 mb-5">
+		<!-- Selector (left) -->
+		<div class="col-lg-4 mb-5">
 		<div class="card h-100">
   			<div class="card-body" id>
     			<!-- Playlists category -->
@@ -143,10 +287,10 @@
   			</div>
 		</div>
 		</div>
-		<!-- Left -->
+		<!-- Selector (left) -->
 
-		<!-- Center pane -->
-		<div class="col-lg-6 mb-5">
+		<!-- Viewer (right) -->
+		<div class="col-lg-8 mb-5">
     	<div class="card h-100">
     		<div id="loading-overlay"></div>
       		<div class="card-body" id="center-card-body">
@@ -170,136 +314,7 @@
   			</div>
 		</div>
 		</div>
-		<!-- Center -->
-
-		<!-- Right pane -->
-		<div class="col-lg-3 mb-5">
-		<div class="card h-100">
-  			<div class="card-body">
-    			<h4 class="card-title">Tune your Playlist!</h4>
-    			<!-- Siren Songs section -->
-		        <div class="key-tracks">
-		          	<h5>Key Tracks</h5>
-		          	<div class="row icons">
-		            	<div class="track">
-		            		<img class="track-icon" id="track-icon0" src="images/placeholder.jpg" data-filled="0">
-		            		<div class="overlay">
-		            			<img class="icon-x" id="icon0" src="images/redX.png">
-		            		</div>
-		            	</div>
-		            	<div class="track">
-		            		<img class="track-icon" id="track-icon1" src="images/placeholder.jpg" data-filled="0">
-		            		<div class="overlay">
-		            			<img class="icon-x" id="icon1" src="images/redX.png">
-		            		</div>
-		            	</div>
-		            	<div class="track">
-		            		<img class="track-icon" id="track-icon2" src="images/placeholder.jpg" data-filled="0">
-		            		<div class="overlay">
-		            			<img class="icon-x" id="icon2" src="images/redX.png">
-		            		</div>
-		            	</div>
-		            	<div class="track">
-		            		<img class="track-icon" id="track-icon3" src="images/placeholder.jpg" data-filled="0">
-		            		<div class="overlay">
-		            			<img class="icon-x" id="icon3" src="images/redX.png">
-		            		</div>
-		            	</div>
-		            	<div class="track">
-		            		<img class="track-icon" id="track-icon4" src="images/placeholder.jpg" data-filled="0">
-		            		<div class="overlay">
-		            			<img class="icon-x" id="icon4" src="images/redX.png">
-		            		</div>
-		            	</div>
-		          	</div>
-		          	<div class="detail">
-		            	<div class="detail-blurb">
-		              		<p>Add Key Tracks by clicking the star icons.</.p>
-		            	</div>
-		            	<div class="track-detail">
-		              		<strong><p id="track-title">Song Title</p></strong>
-		              		<p id="key-artist">Artist</p>
-		              		<p id="key-album">Album</p>
-		            	</div>
-		          	</div>
-		        </div>
-        
-        		<!-- Audio Features section -->
-				<h5>Audio Features</h5>
-				<div class="feature-sliders">
-      				<label for="acoustic">Acousticness</label>
-      				<p class="feature-value" id="acoustic-value">50</p>
-	  				<input type="range" class="slide w-100" id="acoustic" min="0" max="100" step="0.1"
-	  				oninput="showVal(this.value, 'acoustic')" onchange="showVal(this.value, 'acoustic')">
-	  
-	  				<label for="dance">Danceability</label>
-	  				<p class="feature-value" id="dance-value">50</p>
-	  				<input type="range" class="slide w-100" id="dance" min="0" max="100" step="0.1"
-	  				oninput="showVal(this.value, 'dance')" onchange="showVal(this.value, 'dance')">
-
-					<label for="energy">Energy</label>
-					<p class="feature-value" id="energy-value">50</p>
-					<input type="range" class="slide w-100" id="energy" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'energy')" onchange="showVal(this.value, 'energy')">
-
-					<label for="instrument">Instrumentalness</label>
-					<p class="feature-value" id="instrument-value">50</p>
-					<input type="range" class="slide w-100" id="instrument" min="0" max="100" step="0.01"
-					oninput="showVal(this.value, 'instrument')" onchange="showVal(this.value, 'instrument')">
-
-					<label for="liveness">Liveness</label>
-					<p class="feature-value" id="liveness-value">50</p>
-					<input type="range" class="slide w-100" id="liveness" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'liveness')" onchange="showVal(this.value, 'liveness')">
-
-					<label for="loudness">Loudness</label>
-					<p class="feature-value" id="loudness-value">-20</p>
-					<input type="range" class="slide w-100" id="loudness" min="-40" max="0" step="0.1"
-					oninput="showVal(this.value, 'loudness')" onchange="showVal(this.value, 'loudness')">
-
-					<label for="speech">Speechiness</label>
-					<p class="feature-value" id="speech-value">50</p>
-					<input type="range" class="slide w-100" id="speech" min="0" max="100" step="0.01"
-					oninput="showVal(this.value, 'speech')" onchange="showVal(this.value, 'speech')">
-
-					<label for="tempo">Tempo</label>
-					<p class="feature-value" id="tempo-value">135</p>
-					<input type="range" class="slide w-100" id="tempo" min="50" max="220" step="1"
-					oninput="showVal(this.value, 'tempo')" onchange="showVal(this.value, 'tempo')">
-
-					<label for="valence">Valence</label>
-					<p class="feature-value" id="valence-value">50</p>
-					<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
-					oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
-				</div>
-
-				<!-- Generate Playlist button -->
-				<h5>Generate New Playlist!</h5>
-				<button onclick="generatePlaylist()">Generate</button>
-
-				<!-- Hidden form used for playlist generation -->
-				<form id="hidden-form" method="POST">
-					<!-- song IDs -->
-					<input type="hidden" id="songID0" name="songID0" value="">
-					<input type="hidden" id="songID1" name="songID1" value="">
-					<input type="hidden" id="songID2" name="songID2" value="">
-					<input type="hidden" id="songID3" name="songID3" value="">
-					<input type="hidden" id="songID4" name="songID4" value="">
-					<!-- Audio features -->
-					<input type="hidden" id="form-acoustic" name="acoustic" value="">
-					<input type="hidden" id="form-dance" name="dance" value="">
-					<input type="hidden" id="form-energy" name="energy" value="">
-					<input type="hidden" id="form-instrument" name="instrument" value="">
-					<input type="hidden" id="form-liveness" name="liveness" value="">
-					<input type="hidden" id="form-loudness" name="loudness" value="">
-					<input type="hidden" id="form-speech" name="speech" value="">
-					<input type="hidden" id="form-tempo" name="tempo" value="">
-					<input type="hidden" id="form-valence" name="valence" value="">
-				</form>
-  			</div>
-		</div>
-		</div>
-		<!-- Right -->
+		<!-- Viewer (right) -->
 
 </div>
 <!-- /.row -->
@@ -429,27 +444,24 @@
 			}
 		});
 
-		$('.track').mouseenter(function() {
-			var filled = $(this).find('.track-icon').attr('data-filled');
-			if (filled == '1') {
-				$(this).find('.track-icon').css('opacity', 0.6);
-				$(this).find('.overlay').css('opacity', 0.9);
-
-				var index = $(this).find('.track-icon').attr('id').substring(10);
-	    		$('.detail-blurb').css('display', 'none');
-	    		$('.track-detail').css('display', 'block');
-	    		$('#track-title').html(keyTracks[index].track);
-	    		$('#key-artist').html(keyTracks[index].artist);
-	    		$('#key-album').html(keyTracks[index].album);
-	    	}
-    	});
-    	$('.track').mouseleave(function() {
-    		$(this).find('.track-icon').css('opacity', 1);
-			$(this).find('.overlay').css('opacity', 0);
-
-      		$('.detail-blurb').css('display', 'block');
-      		$('.track-detail').css('display', 'none');
-    	});
+		var navpos = $('#mainnav').offset();
+		//console.log(navpos.top);
+		$(window).bind('scroll', function() {
+			if ($(window).scrollTop() > navpos.top && !$("#navbarNavDropdown").is(":visible") ) {
+				console.log('Fixing to top');
+				$('#mainnav').addClass('fixed-top');
+			} else {
+				console.log('Unfixing from top');
+				$('#mainnav').removeClass('fixed-top');
+			}
+		});
+		
+		$(".nav-scroll").click(function() {
+			if ( !$("#navbarNavDropdown").is(":visible") )
+				$('html,body').animate({
+					scrollTop: $("#navbarNavDropdown").offset().top},
+					'slow');
+		});
 
     	$('.icon-x').click(function() {
     		var index = $(this).attr('id').substring(4);
@@ -490,6 +502,7 @@
 		var imageLink = track.image;
 		$( '#track-icon'+(numKeyTracks-1)).attr('src', imageLink);
 		$( '#track-icon'+(numKeyTracks-1)).attr('data-filled', '1');
+
 	}
 
 

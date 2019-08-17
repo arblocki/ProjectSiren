@@ -16,6 +16,24 @@
 	background-color: #36b170;
 }
 
+nav {
+	color: black;
+}
+
+.navbar-toggler {
+	margin-bottom: 3px;
+}
+
+#navbarNavDropdown {
+	border-top: 2px solid rgba(0,0,0,0.4);
+	padding-top: 2rem;
+}
+
+.playlist-tuner {
+	padding-right: 0;
+	padding-left: 0;
+}
+
 body {
 	color: #E7DFDD;
 	background-color: #0A2014;
@@ -91,66 +109,48 @@ tr:hover {
 	box-shadow: -1px 2px 4px #000000;
 }
 
-.key-tracks {
-	margin-bottom: 25px;
-}
-
 .icons {
 	padding: 0;
 	margin: 0;
 }
 
 .track {
-	width: 18%;
-	display: inline;
+	width: 100%;
 	margin: 0 auto;
-	position: relative;
-	top:0;
-	left:0;
 }
 
 .track-icon {
 	width: 100%;
+	margin: 10px;
 	border-radius: 5px;
-	position: relative;
-	top:0;
-	left:0;
 }
 
 .detail {
-	margin-top: 15px;
-	width: 100%;
-	border-radius: 15px;
-	padding: 10px;
-	background-color: rgb(200, 200, 200);
-}
-
-.detail-blurb {
-	vertical-align: center;
-}
-
-.detail-blurb p {
-	margin-bottom: 0;
+	vertical-align: middle;
 }
 
 .track-detail {
-	display: none;
-	vertical-align: center;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.track-text {
+	display: inline-block;
+}
+
+.icon-wrapper {
+	display: inline-block;
 }
 
 #key-artist, #key-album {
 	margin-bottom: 2px;
 }
 
-.overlay {
-	opacity: 0;
-	width: 100%;
-	position: absolute;
-	top:0;
-	left:0;
-}
-
 .icon-x {
-	width: 80%;
-	margin: 10% 10%;
+	width: 10%;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-right: 3%;
+	float: right;
+	vertical-align: center;
 }
