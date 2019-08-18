@@ -21,41 +21,28 @@
 
 	$playlistTrackInfo = $api->getPlaylistTracks($_REQUEST['id']);
 
-	$numTracks = $playlistTrackInfo->total;
 	$playlistTracks = $playlistTrackInfo->items;
 
 	// Initialize array of associative arrays
 	//		Each internal array will have strictly the data that we need
-	$playlistData = array();
+	
+	$audioFeatureTotals = array(0, 0, 0, 0, 0, 0);
+	
 	foreach ($playlistTracks as $track) {
 		if ($track->is_local) {
 			continue;
 		}
 
-
 		$currentTrack = $track->track;
 
 		$audioFeatures = $api->getAudioFeatures($currentTrack->id)->audio_features[0];
 
-		$playlistData[] = array('track' => $currentTrack->name,
-								'trackID' => $currentTrack->id,
-								'artist' => $currentTrack->artists[0]->name,
-								'artistID' => $currentTrack->artists[0]->id,
-								'album' => $currentTrack->album->name,
-								'albumID' => $currentTrack->album->id,
-								'image' => $currentTrack->album->images[1]->url,
-								'popularity' => $currentTrack->popularity,
-								// Audio features
-								'dance' => $audioFeatures->danceability,
-								'energy' => $audioFeatures->energy,
-								'loudness' => $audioFeatures->loudness,
-								'speech' => $audioFeatures->speechiness,
-								'acoustic' => $audioFeatures->acousticness,
-								'instrument' => $audioFeatures->instrumentalness,
-								'liveness' => $audioFeatures->liveness,
-								'valence' => $audioFeatures->valence,
-								'tempo' => $audioFeatures->tempo
-		);
+		$audioFeatureTotals[0] += $audioFeatures->acousticness;
+		$audioFeatureTotals[1] += $audioFeatures->danceability;
+		$audioFeatureTotals[2] += $audioFeatures->energy;
+		$audioFeatureTotals[3] += $audioFeatures->instrumentalness;
+		$audioFeatureTotals[4] += $audioFeatures->tempo;
+		$audioFeatureTotals[5] += $audioFeatures->valence;
 	}
 
-	echo json_encode($playlistData);
+	echo json_encode($response);

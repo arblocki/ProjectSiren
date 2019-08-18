@@ -136,6 +136,7 @@ tr:hover {
 
 .track-text {
 	display: inline-block;
+	width: 85%;
 }
 
 .icon-wrapper {
@@ -146,11 +147,16 @@ tr:hover {
 	margin-bottom: 2px;
 }
 
-.icon-x {
-	width: 10%;
+.redX {
+	display: inline;
 	margin-top: auto;
 	margin-bottom: auto;
-	margin-right: 3%;
+	width: 10%;
+	float: right;
+}
+
+.icon-x {
+	width: 100%;
 	float: right;
 	vertical-align: center;
 }

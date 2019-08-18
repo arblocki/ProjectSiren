@@ -35,9 +35,6 @@
 		'target_danceability' => $_SESSION['dance'],
 		'target_energy' => $_SESSION['energy'],
 		'target_instrumentalness' => $_SESSION['instrument'],
-		'target_liveness' => $_SESSION['liveness'],
-		'target_loudness' => $_SESSION['loudness'],
-		'target_speechiness' => $_SESSION['speech'],
 		'target_tempo' => $_SESSION['tempo'],
 		'target_valence' => $_SESSION['valence']
 	]);
@@ -95,16 +92,14 @@ td {
 <div class="container primary">
 
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-12">
 			<table>
-				<col width="55%">
-				<col width="35%">
-				<col width="10%">
+				<col width="70%">
+				<col width="30%">
 				
 				<thead>
 					<th>Song</th>
 					<th>Artist</th>
-					<th>Remove Song</th>
 				</thead>
 				<tbody>
 				<?php
@@ -118,7 +113,7 @@ td {
 						} else {
 							echo $track->artists[0]->name;
 						}
-						echo '</td><td><img src="images/redX.png" style="width: 2rem;"></td></tr>';
+						echo '</td></tr>';
 					}
 				?>
 				</tbody>

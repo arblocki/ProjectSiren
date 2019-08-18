@@ -22,9 +22,6 @@
 		$_SESSION['dance'] = ($_POST['dance'] / 100);
 		$_SESSION['energy'] = ($_POST['energy'] / 100);
 		$_SESSION['instrument'] = ($_POST['instrument'] / 100);
-		$_SESSION['liveness'] = ($_POST['liveness'] / 100);
-		$_SESSION['loudness'] = $_POST['loudness'];
-		$_SESSION['speech'] = ($_POST['speech'] / 100);
 		$_SESSION['tempo'] = $_POST['tempo'];
 		$_SESSION['valence'] = ($_POST['valence'] / 100);
 
@@ -108,11 +105,13 @@
 			            		<img class="track-icon" id="track-icon0" src="images/placeholder.jpg" data-filled="0">
 			            	</div>
 							<div class="col-9 track-detail">
-								<div class="track-text">
-									<strong class="track-title detail">Song Title</strong>
-									<p class="track-artist detail"> Artist - Album</p>
+								<div class="track-text" id="track-text0">
+									<strong class="track-title detail">Select a key track below.</strong>
+									<p class="track-artist detail"></p>
 								</div>
-								<img class="icon-x" id="icon0" src="images/redX.png">
+								<div class="redX" id="redX0">
+									<img class="icon-x" id="icon0" src="images/redX.png">
+								</div>
 							</div>
 						</div>
 						<div class="row track">
@@ -120,11 +119,13 @@
 			            		<img class="track-icon" id="track-icon1" src="images/placeholder.jpg" data-filled="0">
 			            	</div>
 							<div class="col-9 track-detail">
-								<div class="track-text">
-									<strong class="track-title detail">Song Title</strong>
-									<p class="track-artist detail"> Artist - Album</p>
+								<div class="track-text" id="track-text1">
+									<strong class="track-title detail">Select a key track below.</strong>
+									<p class="track-artist detail"></p>
 								</div>
-								<img class="icon-x" id="icon1" src="images/redX.png">
+								<div class="redX" id="redX1">
+									<img class="icon-x" id="icon1" src="images/redX.png">
+								</div>
 							</div>
 						</div>
 						<div class="row track">
@@ -132,11 +133,13 @@
 			            		<img class="track-icon" id="track-icon2" src="images/placeholder.jpg" data-filled="0">
 			            	</div>
 							<div class="col-9 track-detail">
-								<div class="track-text">
-									<strong class="track-title detail">Song Title</strong>
-									<p class="track-artist detail"> Artist - Album</p>
+								<div class="track-text" id="track-text2">
+									<strong class="track-title detail">Select a key track below.</strong>
+									<p class="track-artist detail"></p>
 								</div>
-								<img class="icon-x" id="icon2" src="images/redX.png">
+								<div class="redX" id="redX2">
+									<img class="icon-x" id="icon2" src="images/redX.png">
+								</div>
 							</div>
 						</div>
 						<div class="row track">
@@ -144,11 +147,13 @@
 			            		<img class="track-icon" id="track-icon3" src="images/placeholder.jpg" data-filled="0">
 			            	</div>
 							<div class="col-9 track-detail">
-								<div class="track-text">
-									<strong class="track-title detail">Song Title</strong>
-									<p class="track-artist detail"> Artist - Album</p>
+								<div class="track-text" id="track-text3">
+									<strong class="track-title detail">Select a key track below.</strong>
+									<p class="track-artist detail"></p>
 								</div>
-								<img class="icon-x" id="icon3" src="images/redX.png">
+								<div class="redX" id="redX3">
+									<img class="icon-x" id="icon3" src="images/redX.png">
+								</div>
 							</div>
 						</div>
 						<div class="row track">
@@ -156,11 +161,13 @@
 			            		<img class="track-icon" id="track-icon4" src="images/placeholder.jpg" data-filled="0">
 			            	</div>
 							<div class="col-9 track-detail">
-								<div class="track-text">
-									<strong class="track-title detail">Song Title</strong>
-									<p class="track-artist detail"> Artist - Album</p>
+								<div class="track-text" id="track-text4">
+									<strong class="track-title detail">Select a key track below.</strong>
+									<p class="track-artist detail"></p>
 								</div>
-								<img class="icon-x" id="icon4" src="images/redX.png">
+								<div class="redX" id="redX4">
+									<img class="icon-x" id="icon4" src="images/redX.png">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -216,9 +223,6 @@
 						<input type="hidden" id="form-dance" name="dance" value="">
 						<input type="hidden" id="form-energy" name="energy" value="">
 						<input type="hidden" id="form-instrument" name="instrument" value="">
-						<input type="hidden" id="form-liveness" name="liveness" value="">
-						<input type="hidden" id="form-loudness" name="loudness" value="">
-						<input type="hidden" id="form-speech" name="speech" value="">
 						<input type="hidden" id="form-tempo" name="tempo" value="">
 						<input type="hidden" id="form-valence" name="valence" value="">
 					</form>
@@ -296,13 +300,11 @@
       		<div class="card-body" id="center-card-body">
         		<h5 class="card-title" style="margin-bottom: 10px;">Current Selection</h5>
     			<table>
-	  			<col width="5%">
-	  			<col width="55%">
+	  			<col width="60%">
 	  			<col width="35%">
 	  			<col width="5%">
 	  
 	  			<thead>
-					<th></th>
 					<th>Song</th>
 					<th>Artist</th>
 					<th style="text-align: center;">Key Track</th>
@@ -336,9 +338,7 @@
 	var numSongs = 1;
 	var json = [];
 	var numKeyTracks = 0;
-	var keyTracks = new Array();	
-	// TODO: Make associative array with key-value pairs: (trackID, xmlhttp)
-	// 		If user unchecks a star and the request for the icon is still active, it will abort it
+	var keyTracks = new Array();
 
 	// AJAX for loading playlists and other songs lists
 	
@@ -351,9 +351,20 @@
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				json = JSON.parse(this.responseText);
-				handleResponse(json);
-				updateFeatures(json);
+				try {
+					json = JSON.parse(this.responseText);
+					handleResponse(json);
+					updateFeatures(json);
+				} catch (SyntaxError) {
+					$('tbody').empty();
+					$('tbody').append(
+				    	'<tr><td></td><td style="color: red;">Playlist request timed out</td><td></td><td></td></tr>'
+				    );
+				    $('#loading-overlay').css("display", "none");
+				    if ($(window).width() < 992 ) {
+						$('.collapse').collapse('hide');
+					}
+				}
 			}
 		};
 		xmlhttp.open("GET", "analyzePlaylist.php?id=" + playlistID, true); // Returns json encoded object 
@@ -362,15 +373,11 @@
 
 	function handleResponse(json) {
 		$('tbody').empty();
-		for (var i = 0; i < json.length; i++) {
-		    var track = json[i];
+		for (var i = 0; i < json.songs.length; i++) {
+		    var track = json.songs[i];
 
 		    $('tbody').append(
-		    	'<tr id="'+i+'"><td><div class="form-check"> \
-					<label class="form-check-label" style="color: #FFFFFF;"> \
-					<input type="checkbox" class="form-check-input" value="" checked> \
-					&nbsp;</label></div></td> \
-				  	<td>'+track.track+'</td><td>'+track.artist+'</td> \
+		    	'<tr id="'+i+'"><td>'+track.track+'</td><td>'+track.artist+'</td> \
 				  	<td><div class="star_container"> \
               		<img class="star" id="star'+i+'" src="images/star_empty.png" onclick="toggleStar('+i+ 
               		')"></div></td></tr>' 
@@ -383,21 +390,8 @@
 	}
 
 	function updateFeatures(json) {
-		audioFeatureTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var numSongs = json.length;
-		for (var i = 0; i < json.length; i++) {
-		    var track = json[i];
-
-		    audioFeatureTotals[0] += track.acoustic;
-		    audioFeatureTotals[1] += track.dance;
-		    audioFeatureTotals[2] += track.energy;
-		    audioFeatureTotals[3] += track.instrument;
-		    audioFeatureTotals[4] += track.liveness;
-		    audioFeatureTotals[5] += track.loudness;
-		    audioFeatureTotals[6] += track.speech;
-		    audioFeatureTotals[7] += track.tempo;
-		    audioFeatureTotals[8] += track.valence;
-		}
+		audioFeatureTotals = [ json.features[0], json.features[1], json.features[2], 
+			json.features[3], json.features[4], json.features[5] ];
 
 		// TODO: MAYBE REVERSE THIS PART SO THAT SLIDERS GET SET FIRST  ??? 
 
@@ -406,20 +400,14 @@
 		$('#dance-value').html( +((audioFeatureTotals[1] / numSongs) * 100).toFixed(6) );
 		$('#energy-value').html( +((audioFeatureTotals[2] / numSongs) * 100).toFixed(6) );
 		$('#instrument-value').html( +((audioFeatureTotals[3] / numSongs) * 100).toFixed(6) );
-		$('#liveness-value').html( +((audioFeatureTotals[4] / numSongs) * 100).toFixed(6) );
-		$('#loudness-value').html( +(audioFeatureTotals[5] / numSongs).toFixed(6) );
-		$('#speech-value').html( +((audioFeatureTotals[6] / numSongs) * 100).toFixed(6) );
-		$('#tempo-value').html( +(audioFeatureTotals[7] / numSongs).toFixed(6) );
-		$('#valence-value').html( +((audioFeatureTotals[8] / numSongs) * 100).toFixed(6) );
+		$('#tempo-value').html( +(audioFeatureTotals[4] / numSongs).toFixed(6) );
+		$('#valence-value').html( +((audioFeatureTotals[5] / numSongs) * 100).toFixed(6) );
 		
 		// Set sliders to their new values
 		$('#acoustic').attr('value', $('#acoustic-value').html());
 		$('#dance').attr('value', $('#dance-value').html());
 		$('#energy').attr('value', $('#energy-value').html());
 		$('#instrument').attr('value', $('#instrument-value').html());
-		$('#liveness').attr('value', $('#liveness-value').html());
-		$('#loudness').attr('value', $('#loudness-value').html());
-		$('#speech').attr('value', $('#speech-value').html());
 		$('#tempo').attr('value', $('#tempo-value').html());
 		$('#valence').attr('value', $('#valence-value').html());
 	}
@@ -432,6 +420,18 @@
 	
 	// jQuery for audio feature sliders, key songs, etc.
 	$(document).ready(function(){
+		// Add top margin to red X's 
+		$(window).resize(function() {
+			if ( $(window).width() < 375 ) {
+				$('.redX').css('margin-top', '3%');
+			} else if ( $(window).width() < 475 ) {
+				$('.redX').css('margin-top', '2%');
+			} else if ( $(window).width() < 575 ) {
+				$('.redX').css('margin-top', '1%');
+			} else {
+				$('.redX').css('margin-top', '0');
+			}
+		});
 
 		// Check marks for audio feature calculation
 		$('.audioFeat').click(function(){
@@ -500,9 +500,10 @@
 		keyTracks.push(track); // TODO: change push from id to object 
 		// Fetch track art - Local storage method
 		var imageLink = track.image;
-		$( '#track-icon'+(numKeyTracks-1)).attr('src', imageLink);
-		$( '#track-icon'+(numKeyTracks-1)).attr('data-filled', '1');
-
+		$( '#track-icon'+(numKeyTracks-1) ).attr('src', imageLink);
+		$( '#track-icon'+(numKeyTracks-1) ).attr('data-filled', '1');
+		$( '#track-text'+(numKeyTracks-1) ).find('.track-title').html(track.track);
+		$( '#track-text'+(numKeyTracks-1) ).find('.track-artist').html(track.artist);
 	}
 
 
@@ -520,12 +521,16 @@
 			var right = index + 1;
 			while (right <= numKeyTracks) {
 				$( '#track-icon'+ index ).attr('src', keyTracks[index].image );
+				$( '#track-text'+ index ).find('.track-title').html( keyTracks[index].track );
+				$( '#track-text'+ index ).find('.track-artist').html( keyTracks[index].artist );
 				//$( '#track-icon'+ index ).attr('data-JSONIndex', $( '#track-icon'+ right ).attr('data-JSONIndex') );
 				++index;
 				++right;
 			}
 			$( '#track-icon'+ index ).attr('src', 'images/placeholder.jpg');
 			$( '#track-icon'+ index ).attr('data-filled', '0');
+			$( '#track-text'+ index ).find('.track-title').html( 'Select a key track below.' );
+			$( '#track-text'+ index ).find('.track-artist').html('');
 		} else {
 			console.log('trackID not found!');
 		}
@@ -562,9 +567,6 @@
 			$('#form-dance').attr('value', $('#dance-value').html() );
 			$('#form-energy').attr('value', $('#energy-value').html() );
 			$('#form-instrument').attr('value', $('#instrument-value').html() );
-			$('#form-liveness').attr('value', $('#liveness-value').html() );
-			$('#form-loudness').attr('value', $('#loudness-value').html() );
-			$('#form-speech').attr('value', $('#speech-value').html() );
 			$('#form-tempo').attr('value', $('#tempo-value').html() );
 			$('#form-valence').attr('value', $('#valence-value').html() );
 			// Submit
