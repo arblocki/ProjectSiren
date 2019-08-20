@@ -18,14 +18,51 @@
 	$accessToken = $session->getAccessToken();
 
 	$api->setAccessToken($accessToken);
+	// API READY
+
+	// Generate the description string 
+	$description = $api->getTrack( $_SESSION['id0'] )->name.' by '.$api->getTrack( $_SESSION['id0'] )->artists[0]->name;
+	for ($i = 1; $i < $_SESSION['numIDs']; ++$i) {
+		$description = $description.', '.$api->getTrack( $_SESSION['id'.$i] )->name.' by '.
+						$api->getTrack( $_SESSION['id0'] )->artists[0]->name;
+	}
+	$description = $description.', Acousticness: '.( floatval($_SESSION['acoustic']) * 100).'%';
+	$description = $description.', Danceability: '.( floatval($_SESSION['dance']) * 100).'%';
+	$description = $description.', Energy: '.( floatval($_SESSION['energy']) * 100).'%';
+	$description = $description.', Instrumentalness: '.( floatval($_SESSION['instrument']) * 100).'%';
+	$description = $description.', Tempo: '.( $_SESSION['tempo']).'BPM';
+	$description = $description.', Valence: '.( floatval($_SESSION['valence']) * 100).'%';
+	
+	// Create playlist and add tracks to it, or redirect to main page 
+	if (isset($_POST['action'])) {
+		if ($_POST['action'] == 'add') {
+			// Create playlist 
+			$newPlaylist = $api->createPlaylist(['name' => $_POST['title'] ]);
+			$id = $newPlaylist->id;
+
+			// Add description 
+			$api->updatePlaylist($id, [
+				'description' => 'This Siren Playlist was generated at ProjectSiren.me with the '.
+								'following key tracks and audio features: '.$description
+			]);
+
+			// Add tracks to it 
+			$api->addPlaylistTracks($id, $_SESSION['recommend']);
+
+			$_SESSION['success'] = $id;
+			header("Location: app.php");
+			return;
+		} else {
+			header("Location: app.php");
+			return;
+		}
+	}
 
 	// Generate comma seperated list of track IDs 
 	$IDs = [ $_SESSION['id0'] ];
 	for ($i = 1; $i < $_SESSION['numIDs']; ++$i) {
 		array_push($IDs, $_SESSION['id'.$i]);
 	}
-
-	//print("<pre>".print_r($IDs, true)."</pre>");
 
 	// Get recommendations 
 	$recommendations = $api->getRecommendations([
@@ -39,7 +76,10 @@
 		'target_valence' => $_SESSION['valence']
 	]);
 
-	//print("<pre>".print_r($recommendations, true)."</pre>");
+	$_SESSION['recommend'] = array();
+	foreach ($recommendations->tracks as $track) {
+		array_push($_SESSION['recommend'], $track->id);
+	}
 
 ?>
 
@@ -63,6 +103,7 @@
 
 <!-- Custom styling -->
 <link href="css/styles.css" rel="stylesheet">
+<link href="css/recommendations.css" rel="stylesheet">
 
 <style>
 
@@ -90,6 +131,22 @@ td {
 
 <!-- Page Content -->
 <div class="container primary">
+
+	<form id="hiddenForm" method="POST">
+		<?php  
+			echo '<input type="text" id="playlistTitle" name="title" value="Siren Playlist based on ';
+			
+			echo $api->getTrack( $_SESSION['id0'] )->name;
+			if ( $_SESSION['numIDs'] == 2 ) {
+				echo ' and '.$api->getTrack( $_SESSION['id1'] )->name;
+			} else if ( $_SESSION['numIDs'] > 1 ) {
+				echo ', '.$api->getTrack( $_SESSION['id1'] )->name.', and more...';
+			}
+
+			echo '">';
+		?>
+		<input id="action" type="text" name="action">
+	</form>
 
 	<div class="row">
 		<div class="col-12">
@@ -121,4 +178,46 @@ td {
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-xs-0 col-md-3"></div>
+
+		<div class="col-xs-12 col-md-3">
+			<button class="actionButton" onclick="addPlaylist()">Add this to my Spotify!</button>
+		</div>
+		<div class="col-xs-12 col-md-3">
+			<button class="actionButton" onclick="startOver()">Start Over.</button>
+		</div>
+	
+		<div class="col-xs-0 col-md-3"></div>
+
+	</div>
+
 </div>
+
+<!-- Footer -->
+<footer class="py-5 primary-neutral">
+<div class="container">
+	<p class="m-0 text-center text-white">Copyright &copy; Project Siren 2019</p>
+</div>
+<!-- /.container -->
+</footer>
+
+<script type="text/javascript">
+	
+	function addPlaylist() {
+		$('#action').attr('value', 'add');
+		$('#hiddenForm').submit();
+	}
+
+	function startOver() {
+		$('#action').attr('value', 'restart');
+		$('#hiddenForm').submit();
+	}
+
+</script>
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>

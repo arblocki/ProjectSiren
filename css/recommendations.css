@@ -1,0 +1,23 @@
+
+#playlistTitle {
+	width: 100%;
+	margin-bottom: 2%;
+}
+
+.row {
+	margin-bottom: 3%;
+}
+
+.actionButton {
+	margin: 0 auto;
+	padding: 1%;
+	border-radius: 5px;
+}
+
+#action {
+	display: none;
+}
+
+table {
+	width: 100%;
+}

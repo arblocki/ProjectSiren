@@ -29,6 +29,13 @@
 		return;
 	}
 
+	// Unset any previous IDs 
+	for ($i = 0; $i < 5; ++$i) {
+		if (isset( $_SESSION['id'.$i] )) {
+			unset( $_SESSION['id'.$i] );
+		}
+	}
+
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 
 	// Fetch the saved access token from $_SESSION
@@ -238,6 +245,17 @@
 <!-- Page Content -->
 <div class="container primary">
 
+<?php
+if ( isset($_SESSION['success']) ) {
+	echo '<div class="alert alert-success" role="alert"> 
+	  	Your playlist was successfully added to your Spotify! 
+	  	<a href="https://open.spotify.com/playlist/'.$_SESSION['success'].'" 
+	  		target="_blank" class="alert-link">Check it out!</a>
+		</div>';
+	unset($_SESSION['success']);
+}
+?>
+
 <div class="row">
 
 		<!-- Selector (left) -->
@@ -246,11 +264,10 @@
   			<div class="card-body" id>
     			<!-- Playlists category -->
 				<div class="playlists-button">
-	    			<a data-toggle="collapse" data-target="#collapse1"><h5>Playlists</h5></a>
+	    			<a id="playlists" data-toggle="collapse" data-target="#collapse1"><h5>Playlists</h5></a>
     			</div>
     			<div id="collapse1" class="collapse">
   	  				<ul class="list-group">
-	    			<!--<a onclick="getTracks('7HJcgdQgJAOGel6j7o0Mwo')"><li class="list-group-item">Trip</li></a>-->
 	    			<?php 
 	    				for ($i = 0; $i < $numPlaylists; ++$i) {
 	    					echo '<a onclick="getTracks(\''.$playlists[$i]->id.'\')"><li class="list-group-item">'.
@@ -262,28 +279,28 @@
 	
 				<!-- Top Artists -->
 				<div class="playlists-button">
-				    <a data-toggle="collapse" data-target="#collapse2"><h5>Top Artists</h5></a>
+				    <a data-toggle="collapse" data-target="#collapse2"><h5>Top Artists -- Coming Soon!</h5></a>
 				</div>
 				<div id="collapse2" class="collapse">
-					<ul class="list-group">
-					<li class="list-group-item">Tyler, The Creator</li>
-					<li class="list-group-item">BROCKHAMPTON</li>
-					<li class="list-group-item">MF DOOM</li>
-					</ul>
+					<!--<ul class="list-group">
+						<li class="list-group-item">Tyler, The Creator</li>
+						<li class="list-group-item">BROCKHAMPTON</li>
+						<li class="list-group-item">MF DOOM</li>
+					</ul>-->
 				</div>
 
 				<!-- Top Songs -->
 				<div class="playlists-button">
-				    <a data-toggle="collapse" data-target="#collapse3"><h5>Top Songs</h5></a>
+				    <a data-toggle="collapse" data-target="#collapse3"><h5>Top Songs -- Coming Soon!</h5></a>
 				</div>
 				<div id="collapse3" class="collapse">
-					<ul class="list-group">
-					<li class="list-group-item">NEW MAGIC WAND</li>
-					<li class="list-group-item">STUPID</li>
-					<li class="list-group-item">BLEACH</li>
-					<li class="list-group-item">Crime Pays</li>
-					<li class="list-group-item">Meat Grinder</li>
-					</ul>
+					<!--<ul class="list-group">
+						<li class="list-group-item">NEW MAGIC WAND</li>
+						<li class="list-group-item">STUPID</li>
+						<li class="list-group-item">BLEACH</li>
+						<li class="list-group-item">Crime Pays</li>
+						<li class="list-group-item">Meat Grinder</li>
+					</ul>-->
 				</div>
 		
 				<!-- Recently Played Songs -->
@@ -348,8 +365,9 @@
 			xmlhttp.abort();
 		}*/
 		$('#loading-overlay').css("display", "block");
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
+		// Send request to get tracks 
+		var trackRequest = new XMLHttpRequest();
+		trackRequest.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				try {
 					json = JSON.parse(this.responseText);
@@ -367,14 +385,15 @@
 				}
 			}
 		};
-		xmlhttp.open("GET", "analyzePlaylist.php?id=" + playlistID, true); // Returns json encoded object 
-		xmlhttp.send();
+		trackRequest.open("GET", "getPlaylist.php?id=" + playlistID, true); // Returns json encoded object 
+		trackRequest.send();
 	}
 
 	function handleResponse(json) {
 		$('tbody').empty();
-		for (var i = 0; i < json.songs.length; i++) {
-		    var track = json.songs[i];
+		numSongs = json.length;
+		for (var i = 0; i < numSongs; i++) {
+		    var track = json[i];
 
 		    $('tbody').append(
 		    	'<tr id="'+i+'"><td>'+track.track+'</td><td>'+track.artist+'</td> \
@@ -390,26 +409,43 @@
 	}
 
 	function updateFeatures(json) {
-		audioFeatureTotals = [ json.features[0], json.features[1], json.features[2], 
-			json.features[3], json.features[4], json.features[5] ];
+		audioFeatureTotals = [0, 0, 0, 0, 0, 0];
 
-		// TODO: MAYBE REVERSE THIS PART SO THAT SLIDERS GET SET FIRST  ??? 
+		var completed = 0;
+		// Send request for each song and add the features to the running totals
+		for (var i = 0; i < numSongs; ++i) {
+			var audioRequest = new XMLHttpRequest();
+			audioRequest.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					++completed;
+					audioFeatures = JSON.parse(this.responseText);
+					audioFeatureTotals[0] += audioFeatures[0];
+					audioFeatureTotals[1] += audioFeatures[1];
+					audioFeatureTotals[2] += audioFeatures[2];
+					audioFeatureTotals[3] += audioFeatures[3];
+					audioFeatureTotals[4] += audioFeatures[4];
+					audioFeatureTotals[5] += audioFeatures[5];
 
-		// Set numerical values to their new values
-		$('#acoustic-value').html( +((audioFeatureTotals[0] / numSongs) * 100).toFixed(6) );
-		$('#dance-value').html( +((audioFeatureTotals[1] / numSongs) * 100).toFixed(6) );
-		$('#energy-value').html( +((audioFeatureTotals[2] / numSongs) * 100).toFixed(6) );
-		$('#instrument-value').html( +((audioFeatureTotals[3] / numSongs) * 100).toFixed(6) );
-		$('#tempo-value').html( +(audioFeatureTotals[4] / numSongs).toFixed(6) );
-		$('#valence-value').html( +((audioFeatureTotals[5] / numSongs) * 100).toFixed(6) );
-		
-		// Set sliders to their new values
-		$('#acoustic').attr('value', $('#acoustic-value').html());
-		$('#dance').attr('value', $('#dance-value').html());
-		$('#energy').attr('value', $('#energy-value').html());
-		$('#instrument').attr('value', $('#instrument-value').html());
-		$('#tempo').attr('value', $('#tempo-value').html());
-		$('#valence').attr('value', $('#valence-value').html());
+					// Set numerical values to their new values
+					$('#acoustic-value').html( +((audioFeatureTotals[0] / completed) * 100).toFixed(6) );
+					$('#dance-value').html( +((audioFeatureTotals[1] / completed) * 100).toFixed(6) );
+					$('#energy-value').html( +((audioFeatureTotals[2] / completed) * 100).toFixed(6) );
+					$('#instrument-value').html( +((audioFeatureTotals[3] / completed) * 100).toFixed(6) );
+					$('#tempo-value').html( +(audioFeatureTotals[4] / completed).toFixed(6) );
+					$('#valence-value').html( +((audioFeatureTotals[5] / completed) * 100).toFixed(6) );
+					
+					// Set sliders to their new values
+					$('#acoustic').attr('value', $('#acoustic-value').html());
+					$('#dance').attr('value', $('#dance-value').html());
+					$('#energy').attr('value', $('#energy-value').html());
+					$('#instrument').attr('value', $('#instrument-value').html());
+					$('#tempo').attr('value', $('#tempo-value').html());
+					$('#valence').attr('value', $('#valence-value').html());
+				}
+			};
+			audioRequest.open("GET", "getSongFeatures.php?id=" + json[i].trackID, true); 
+			audioRequest.send();
+		}
 	}
 
 	function showVal(newVal, featureName) {
@@ -420,6 +456,11 @@
 	
 	// jQuery for audio feature sliders, key songs, etc.
 	$(document).ready(function(){
+		// Expand playlist when page loads 
+		setTimeout( function() {
+			$('#playlists').click();
+		}, 1000);
+
 		// Add top margin to red X's 
 		$(window).resize(function() {
 			if ( $(window).width() < 375 ) {
