@@ -10,7 +10,7 @@
 
 	// Fetch the saved access token from somewhere. A database for example.
 	session_start();
-	$stmt = $pdo->query('SELECT * FROM users WHERE username = '.$_SESSION['id']);
+	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
 	$row = $stmt->fetch();
 
 	$session->refreshAccessToken($row['refresh']);
@@ -24,8 +24,8 @@
 	$audioFeatures = $api->getAudioFeatures('7lW2HbFRh65PMz82J7mPnb');
 	print("<pre>".print_r($audioFeatures, true)."</pre>");*/
 
-	$test = $api->getPlaylist('1vdulGmOo1satkc8G01qrJ');
+	//$test = $api->getPlaylist('1vdulGmOo1satkc8G01qrJ');
 	//$analysis = analyzePlaylist($api, $test);
 
-	print("<pre>".print_r($test, true)."</pre>");
+	print("<pre>".print_r($api->me(), true)."</pre>");
 	

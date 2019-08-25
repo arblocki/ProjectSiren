@@ -23,21 +23,25 @@
 	$userQuery = $pdo->query('SELECT * FROM users WHERE user_id = '.$me->id);
 
 	if ( !$userQuery->fetch() ) {
-		$stmt = $pdo->prepare('INSERT INTO users (user_id, access, refresh) 
-			VALUES ( :uid, :acc, :ref )');
+		$stmt = $pdo->prepare('INSERT INTO users (user_id, name, email, access, refresh) 
+			VALUES ( :uid, :nme, :eml, :acc, :ref )');
 
 		$stmt->execute(array(
-		  ':uid' => $me->id,
-		  ':acc' => $accessToken,
-		  ':ref' => $refreshToken)
+			':uid' => $me->id,
+			':nme' => $me->display_name,
+			':eml' => $me->email,
+			':acc' => $accessToken,
+			':ref' => $refreshToken)
 		);
 	} else {
-		$stmt = $pdo->prepare('UPDATE users SET access = :acc, 
-			refresh = :ref WHERE user_id = '.$me->id);
+		$stmt = $pdo->prepare('UPDATE users SET name = :nme, email = :eml, 
+			access = :acc, refresh = :ref WHERE user_id = '.$me->id);
 
 		$stmt->execute(array(
-		  ':acc' => $accessToken,
-		  ':ref' => $refreshToken)
+			':nme' => $me->display_name,
+			':eml' => $me->email,
+			':acc' => $accessToken,
+			':ref' => $refreshToken)
 		);
 	}
 
