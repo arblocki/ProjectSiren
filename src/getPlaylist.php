@@ -2,14 +2,14 @@
 
 	header('Content-Type: application/json');
 
-	require 'vendor/autoload.php';
+	require '../vendor/autoload.php';
 	require_once "pdo.php";
 	require_once "session.php";
 
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 	session_start();
 
-	$stmt = $pdo->query('SELECT * FROM users WHERE username = '.$_SESSION['id']);
+	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
 	$row = $stmt->fetch();
 	$session->refreshAccessToken($row['refresh']);
 	$accessToken = $session->getAccessToken();

@@ -8,10 +8,8 @@
 	margin-bottom: 3%;
 }
 
-.actionButton {
-	margin: 0 auto;
-	padding: 1%;
-	border-radius: 5px;
+.btn {
+	margin: 2% auto;
 }
 
 #action {

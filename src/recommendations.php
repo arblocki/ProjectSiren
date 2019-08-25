@@ -1,6 +1,6 @@
 <?php 
 
-	require 'vendor/autoload.php';
+	require '../vendor/autoload.php';
 	require_once "pdo.php";
 	require_once "session.php";
 
@@ -10,7 +10,7 @@
 
 	// Fetch the saved access token from $_SESSION
 	session_start();
-	$stmt = $pdo->query('SELECT * FROM users WHERE username = '.$_SESSION['id']);
+	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
 	
 	$row = $stmt->fetch();
 
@@ -19,23 +19,13 @@
 
 	$api->setAccessToken($accessToken);
 	// API READY
-
-	// Generate the description string 
-	$description = $api->getTrack( $_SESSION['id0'] )->name.' by '.$api->getTrack( $_SESSION['id0'] )->artists[0]->name;
-	for ($i = 1; $i < $_SESSION['numIDs']; ++$i) {
-		$description = $description.', '.$api->getTrack( $_SESSION['id'.$i] )->name.' by '.
-						$api->getTrack( $_SESSION['id0'] )->artists[0]->name;
-	}
-	$description = $description.', Acousticness: '.( floatval($_SESSION['acoustic']) * 100).'%';
-	$description = $description.', Danceability: '.( floatval($_SESSION['dance']) * 100).'%';
-	$description = $description.', Energy: '.( floatval($_SESSION['energy']) * 100).'%';
-	$description = $description.', Instrumentalness: '.( floatval($_SESSION['instrument']) * 100).'%';
-	$description = $description.', Tempo: '.( $_SESSION['tempo']).'BPM';
-	$description = $description.', Valence: '.( floatval($_SESSION['valence']) * 100).'%';
 	
 	// Create playlist and add tracks to it, or redirect to main page 
-	if (isset($_POST['action'])) {
+	if (isset($_POST['action'])) { 
 		if ($_POST['action'] == 'add') {
+			// Generate the description string 
+			$description = getDescription($api); // from func.php
+
 			// Create playlist 
 			$newPlaylist = $api->createPlaylist(['name' => $_POST['title'] ]);
 			$id = $newPlaylist->id;
@@ -48,6 +38,9 @@
 
 			// Add tracks to it 
 			$api->addPlaylistTracks($id, $_SESSION['recommend']);
+
+			// Add playlist record to database 
+			insertPlaylist($pdo);
 
 			$_SESSION['success'] = $id;
 			header("Location: app.php");
@@ -102,8 +95,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
 
 <!-- Custom styling -->
-<link href="css/styles.css" rel="stylesheet">
-<link href="css/recommendations.css" rel="stylesheet">
+<link href="../css/styles.css" rel="stylesheet">
+<link href="../css/recommendations.css" rel="stylesheet">
 
 <style>
 
@@ -182,10 +175,10 @@ td {
 		<div class="col-xs-0 col-md-3"></div>
 
 		<div class="col-xs-12 col-md-3">
-			<button class="actionButton" onclick="addPlaylist()">Add this to my Spotify!</button>
+			<a class="btn btn-lg" onclick="addPlaylist()">Add this to my Spotify!</a>
 		</div>
 		<div class="col-xs-12 col-md-3">
-			<button class="actionButton" onclick="startOver()">Start Over.</button>
+			<a class="btn btn-lg" onclick="startOver()">Start Over.</a>
 		</div>
 	
 		<div class="col-xs-0 col-md-3"></div>
@@ -195,7 +188,7 @@ td {
 </div>
 
 <!-- Footer -->
-<footer class="py-5 primary-neutral">
+<footer class="py-5 secondary">
 <div class="container">
 	<p class="m-0 text-center text-white">Copyright &copy; Project Siren 2019</p>
 </div>
