@@ -10,13 +10,8 @@
 
 	// Fetch the saved access token from somewhere. A database for example.
 	session_start();
-	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
-	$row = $stmt->fetch();
-
-	$session->refreshAccessToken($row['refresh']);
-	$accessToken = $session->getAccessToken();
-
-	$api->setAccessToken($accessToken);
+	
+	require_once "apiLogin.php";
 
 	// Test out API methods to your heart's desire 
 

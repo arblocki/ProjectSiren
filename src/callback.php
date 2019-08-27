@@ -20,7 +20,7 @@
 
 	// Store the access and refresh tokens somewhere. In a database for example.
 
-	$userQuery = $pdo->query('SELECT * FROM users WHERE user_id = '.$me->id);
+	$userQuery = $pdo->query('SELECT * FROM users WHERE user_id = \''.$me->id.'\'');
 
 	if ( !$userQuery->fetch() ) {
 		$stmt = $pdo->prepare('INSERT INTO users (user_id, name, email, access, refresh) 
@@ -35,7 +35,7 @@
 		);
 	} else {
 		$stmt = $pdo->prepare('UPDATE users SET name = :nme, email = :eml, 
-			access = :acc, refresh = :ref WHERE user_id = '.$me->id);
+			access = :acc, refresh = :ref WHERE user_id = \''.$me->id.'\'');
 
 		$stmt->execute(array(
 			':nme' => $me->display_name,
@@ -56,6 +56,7 @@
 	// Store the id in SESSION and redirect to the app
 	session_start();
 	$_SESSION['id'] = $me->id;
-	header('Location: http://localhost/ProjectSiren/src/app.php');
+	//$_SESSION['refresh'] = $refreshToken;
+	header('Location: http://projectsiren.us-east-2.elasticbeanstalk.com/src/app.php');
 	die();
 	

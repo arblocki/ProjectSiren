@@ -8,6 +8,9 @@
 
 	// Check if form has been submitted to get recommendations 
 	session_start();
+
+	//sleep(1);
+
 	if (isset($_POST['songID0'])) {
 		$_SESSION['id0'] = $_POST['songID0'];
 		$_SESSION['numIDs'] = 1;
@@ -36,17 +39,7 @@
 		}
 	}
 
-	$api = new SpotifyWebAPI\SpotifyWebAPI();
-
-	// Fetch the saved access token from $_SESSION
-	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
-	
-	$row = $stmt->fetch();
-
-	$session->refreshAccessToken($row['refresh']);
-	$accessToken = $session->getAccessToken();
-
-	$api->setAccessToken($accessToken);
+	require_once "apiLogin.php";
 
 	// Get user playlists
 	$playlists = getPlaylists($api, 50, 0);

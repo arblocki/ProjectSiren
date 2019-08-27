@@ -6,16 +6,9 @@
 	require_once "pdo.php";
 	require_once "session.php";
 
-	$api = new SpotifyWebAPI\SpotifyWebAPI();
-
 	session_start();
-	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
-	$row = $stmt->fetch();
-
-	$session->refreshAccessToken($row['refresh']);
-	$accessToken = $session->getAccessToken();
-
-	$api->setAccessToken($accessToken);
+	
+	require_once "apiLogin.php";
 
 	// API READY 
 

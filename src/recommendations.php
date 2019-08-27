@@ -6,20 +6,15 @@
 
 	include 'func.php';
 
-	$api = new SpotifyWebAPI\SpotifyWebAPI();
-
 	// Fetch the saved access token from $_SESSION
 	session_start();
-	$stmt = $pdo->query('SELECT * FROM users WHERE user_id = '.$_SESSION['id']);
+
+	require_once "apiLogin.php";
 	
-	$row = $stmt->fetch();
-
-	$session->refreshAccessToken($row['refresh']);
-	$accessToken = $session->getAccessToken();
-
-	$api->setAccessToken($accessToken);
 	// API READY
 	
+	//sleep(1);
+
 	// Create playlist and add tracks to it, or redirect to main page 
 	if (isset($_POST['action'])) { 
 		if ($_POST['action'] == 'add') {
