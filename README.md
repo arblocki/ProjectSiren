@@ -1,4 +1,4 @@
-# [Project Siren](https://ProjectSiren.me)
+# [Project Siren](http://projectsiren.us-east-2.elasticbeanstalk.com/)
 
 Project Siren (ProjectSiren.me) is a web app built to help you discover new music using a more direct interface with the Spotify Web API. Individually tweak the audio features and recommendation seeds to acquire a playlist that is exactly what you want to listen to at a moment's notice. 
 
