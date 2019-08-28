@@ -1,7 +1,8 @@
 <?php 
 
-	// Get user playlists
-	// Returns array with playlist objects 
+	// FUNCTION: Get user's playlists (limit is number of playlists, offset is how many playlists to skip)
+	// RETURNS: array with playlist objects 
+	// Called in app.php in Model to get user's playlists 
 	function getPlaylists ($api, $limit, $offset) {
 		// Call the api method with the given parameters 
 		$playlists = $api->getMyPlaylists([
@@ -13,7 +14,8 @@
 	}
 
 
-	// Generates playlist description from key tracks and audio features 
+	// FUNCTION: Generates playlist description from key tracks and audio features 
+	// Called when playlist is created in Model of recommendations.php 
 	function getDescription ($api) {
 
 		// Add first key track 
@@ -37,8 +39,10 @@
 		return $description;
 	}
 
-	// Inserts a record of the generated playlist into the playlist table
+	// FUNCTION: Inserts a record of the generated playlist into the playlist table
+	// Called in recommendations.php Model to create new playlist in user's account 
 	function insertPlaylist ($pdo) {
+		// Switch statement is used to insert into different columns based on number of key tracks used 
 		switch ( $_SESSION['numIDs'] ) {
 			case 1:
 				$stmt = $pdo->prepare('INSERT INTO playlist (user_id, creation_time, keyID0, acoustic, 
