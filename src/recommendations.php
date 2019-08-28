@@ -6,17 +6,16 @@
 
 	include 'func.php';
 
-	// Fetch the saved access token from $_SESSION
 	session_start();
 
+	// Login to API 
 	require_once "apiLogin.php";
 	
 	// API READY
 	
-	//sleep(1);
-
-	// Create playlist and add tracks to it, or redirect to main page 
+	// Triggered when user clicks one of the buttons on this page  
 	if (isset($_POST['action'])) { 
+		// Create playlist if the user clicked "Add to my Spotify!"
 		if ($_POST['action'] == 'add') {
 			// Generate the description string 
 			$description = getDescription($api); // from func.php
@@ -37,10 +36,12 @@
 			// Add playlist record to database 
 			insertPlaylist($pdo);
 
+			// Save playlist ID for success flash message and redirect to app 
 			$_SESSION['success'] = $id;
 			header("Location: app.php");
 			return;
 		} else {
+			// Redirect to app 
 			header("Location: app.php");
 			return;
 		}
@@ -64,6 +65,7 @@
 		'target_valence' => $_SESSION['valence']
 	]);
 
+	// Push array of song IDs to SESSION 
 	$_SESSION['recommend'] = array();
 	foreach ($recommendations->tracks as $track) {
 		array_push($_SESSION['recommend'], $track->id);
@@ -123,7 +125,12 @@ td {
 	<form id="hiddenForm" method="POST">
 		<?php  
 			echo '<input type="text" id="playlistTitle" name="title" value="Siren Playlist based on ';
-			
+				
+			// Generate playlist title based on number of key tracks 
+			// EXAMPLE: 
+			// 	1 key track: 	...based on {title} by {artist}
+			// 	2 tracks: 	...based on {title} by {artist} and {title} by {artist}
+			// 	3 or more: 	...based on {title} by {artist}, {title} by {artist}, and more...
 			echo $api->getTrack( $_SESSION['id0'] )->name;
 			if ( $_SESSION['numIDs'] == 2 ) {
 				echo ' and '.$api->getTrack( $_SESSION['id1'] )->name;
@@ -148,6 +155,7 @@ td {
 				</thead>
 				<tbody>
 				<?php
+					// Display recommendation tracks in table 
 					foreach ($recommendations->tracks as $track) {
 						echo '<tr><td>'.$track->name.'</td><td>';
 						if (count($track->artists) > 1) {
@@ -192,11 +200,15 @@ td {
 
 <script type="text/javascript">
 	
+	// FUNCTION: Set hidden form action field to "add" and then submit form
+	// Triggered when add playlist button is clicked
 	function addPlaylist() {
 		$('#action').attr('value', 'add');
 		$('#hiddenForm').submit();
 	}
 
+	// FUNCTION: Set hidden form action field to "restart" and then submit form
+	// Triggered when start over button is clicked
 	function startOver() {
 		$('#action').attr('value', 'restart');
 		$('#hiddenForm').submit();
