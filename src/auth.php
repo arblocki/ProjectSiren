@@ -3,8 +3,6 @@
 	require_once '../vendor/autoload.php';
 	require_once "session.php";
 
-	error_log('session created');
-
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 
 	if (isset($_GET['code'])) {
