@@ -10,19 +10,16 @@
 	$accessToken = $session->getAccessToken();
 	$refreshToken = $session->getRefreshToken();
 
-	//error_log('accessToken: '.$accessToken);
-	//error_log('reffreshToken: '.$refreshToken);
-
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 	$api->setAccessToken($accessToken);
 
 	$me = $api->me();
-
-	// Store the access and refresh tokens somewhere. In a database for example.
-
+	
+	// Query the user table for an existing record of this user 
 	$userQuery = $pdo->query('SELECT * FROM users WHERE user_id = \''.$me->id.'\'');
-
+	
 	if ( !$userQuery->fetch() ) {
+		// If new user, insert new record into database 
 		$stmt = $pdo->prepare('INSERT INTO users (user_id, name, email, access, refresh) 
 			VALUES ( :uid, :nme, :eml, :acc, :ref )');
 
@@ -34,6 +31,7 @@
 			':ref' => $refreshToken)
 		);
 	} else {
+		// If existing user, update current record in database 
 		$stmt = $pdo->prepare('UPDATE users SET name = :nme, email = :eml, 
 			access = :acc, refresh = :ref WHERE user_id = \''.$me->id.'\'');
 
@@ -56,7 +54,6 @@
 	// Store the id in SESSION and redirect to the app
 	session_start();
 	$_SESSION['id'] = $me->id;
-	//$_SESSION['refresh'] = $refreshToken;
 	header('Location: http://projectsiren.us-east-2.elasticbeanstalk.com/src/app.php');
 	die();
 	
