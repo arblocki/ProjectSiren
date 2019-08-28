@@ -8,9 +8,9 @@
 
 	$api = new SpotifyWebAPI\SpotifyWebAPI();
 
-	// Fetch the saved access token from somewhere. A database for example.
 	session_start();
 	
+	// Login to API
 	require_once "apiLogin.php";
 
 	// Test out API methods to your heart's desire 
