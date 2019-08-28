@@ -6,12 +6,12 @@
 
 	include 'func.php';
 
-	// Check if form has been submitted to get recommendations 
 	session_start();
 
-	//sleep(1);
-
+	// Check if recommendation form has been submitted (POST/Redirect/GET pattern)
 	if (isset($_POST['songID0'])) {
+		// 	Take POST variables and set them to SESSION array 
+		// Set first ID and any others that are present
 		$_SESSION['id0'] = $_POST['songID0'];
 		$_SESSION['numIDs'] = 1;
 		for ($i = 1; $i < 5; ++$i) {
@@ -20,14 +20,15 @@
 				++$_SESSION['numIDs'];
 			}
 		}
-
+		// Convert from percentage to float for API request to Recommendations 
 		$_SESSION['acoustic'] = ($_POST['acoustic'] / 100);
 		$_SESSION['dance'] = ($_POST['dance'] / 100);
 		$_SESSION['energy'] = ($_POST['energy'] / 100);
 		$_SESSION['instrument'] = ($_POST['instrument'] / 100);
 		$_SESSION['tempo'] = $_POST['tempo'];
 		$_SESSION['valence'] = ($_POST['valence'] / 100);
-
+	
+		// Redirect to recommendations page 
 		header("Location: recommendations.php");
 		return;
 	}
@@ -39,12 +40,12 @@
 		}
 	}
 
+	// Login to API
 	require_once "apiLogin.php";
 
 	// Get user playlists
 	$playlists = getPlaylists($api, 50, 0);
 	$numPlaylists = count($playlists);
-	//print("<pre>".print_r($playlists, true)."</pre>");
 
 ?>
 
@@ -239,6 +240,7 @@
 <div class="container primary content">
 
 <?php
+// Flash success mesage if playlist was just created 
 if ( isset($_SESSION['success']) ) {
 	echo '<div class="alert alert-success" role="alert"> 
 	  	Your playlist was successfully added to your Spotify! 
@@ -354,7 +356,8 @@ if ( isset($_SESSION['success']) ) {
 
 	// AJAX for loading playlists and other songs lists
 	
-	// Get track data for a given playlist
+	// FUNCTION: Get list of tracks for a given playlist in JSON format 
+	// Triggered when a playlist is clicked 
 	function getTracks(playlistID) {
 		/*if ($.active > 0) { 
 			xmlhttp.abort();
@@ -384,6 +387,8 @@ if ( isset($_SESSION['success']) ) {
 		trackRequest.send();
 	}
 
+	// FUNCTION: Take JSON-formatted track list and display it in the right column table 
+	// Triggered in getTracks when response is received
 	function handleResponse(json) {
 		$('tbody').empty();
 		numSongs = json.length;
@@ -403,6 +408,8 @@ if ( isset($_SESSION['success']) ) {
 		}
 	}
 
+	// FUNCTION: Take JSON-formatted track list, get audio features for each song, and add to running averages  
+	// Triggered in getTracks after response is handled 
 	function updateFeatures(json) {
 		audioFeatureTotals = [0, 0, 0, 0, 0, 0];
 
@@ -443,20 +450,23 @@ if ( isset($_SESSION['success']) ) {
 		}
 	}
 
+	// FUNCTION: Update text to show slider value for audio features 
+	// Triggered when sliders are moved 
 	function showVal(newVal, featureName) {
 		var idName = '#' + featureName + '-value';
 		// DEBUG: window.console && console.log('updating '+idName+' to '+newVal);
 		$(idName).html(newVal);
 	}
 	
-	// jQuery for audio feature sliders, key songs, etc.
+	// When document is ready: 
 	$(document).ready(function(){
+		
 		// Expand playlist when page loads 
 		setTimeout( function() {
 			$('#playlists').click();
 		}, 1000);
 
-		// Add top margin to red X's 
+		// Add responsive top margin to red X's 
 		$(window).resize(function() {
 			if ( $(window).width() < 375 ) {
 				$('.redX').css('margin-top', '3%');
@@ -469,59 +479,49 @@ if ( isset($_SESSION['success']) ) {
 			}
 		});
 
-		// Check marks for audio feature calculation
-		$('.audioFeat').click(function(){
-			if($(this).prop("checked") == true){
-				alert("Checkbox is checked.");
-				// Add this song's audio features to the averages
-			} else {
-				alert("Checkbox is unchecked.");
-				// Take out this song's audio features from the averages
-			}
-		});
-
+		// If navbar is collapsed and user scrolls past it, it is fixed to top of screen 
 		var navpos = $('#mainnav').offset();
-		//console.log(navpos.top);
 		$(window).bind('scroll', function() {
 			if ($(window).scrollTop() > navpos.top && !$("#navbarNavDropdown").is(":visible") ) {
-				console.log('Fixing to top');
 				$('#mainnav').addClass('fixed-top');
 			} else {
-				console.log('Unfixing from top');
 				$('#mainnav').removeClass('fixed-top');
 			}
 		});
 		
+		// When navbar is collapsed and then clicked, it opens and the page automatically scrolls up to it (mainly for mobile use)
 		$(".nav-scroll").click(function() {
 			if ( !$("#navbarNavDropdown").is(":visible") )
 				$('html,body').animate({
 					scrollTop: $("#navbarNavDropdown").offset().top},
 					'slow');
 		});
-
-    	$('.icon-x').click(function() {
-    		var index = $(this).attr('id').substring(4);
-    		var ID = keyTracks[index].trackID;
-    		console.log('deleting index '+index+', songID is '+ID);
-    		deleteKeyTrack(ID);
-    		checkForStar(ID);
-    	});
+	
+		// When the red X on a key track is pressed, delete the track in the list and uncheck the star (if one exists on the page)
+    		$('.icon-x').click(function() {
+    			var index = $(this).attr('id').substring(4);
+    			var ID = keyTracks[index].trackID;
+    			deleteKeyTrack(ID);
+    			checkForStar(ID);
+    		});
 	});
 
+	// FUNCTION: Change the star's appearance and add the respective track to key tracks list
+	// Triggered when a star is clicked 
 	function toggleStar(songIndex) {
-    	if (numKeyTracks == 5 && $('#star'+songIndex).attr("src") == '../images/star_empty.png') {
+		// Check if there are already 5 key tracks 
+    		if (numKeyTracks == 5 && $('#star'+songIndex).attr("src") == '../images/star_empty.png') {
 			alert('Maximum 5 key tracks can be selected.');
 		} else {
+			// Toggle view of star (checked or unchecked) and add/delete key track 
 			if ($('#star'+songIndex).attr("src") == '../images/star_empty.png') {
 				$('#star'+songIndex).attr("src", "../images/star_filled.png");
 				++numKeyTracks;
-				window.console && console.log('key tracks: '+numKeyTracks);
 				// Call function to add song to key tracks 
 				var track = json[songIndex];
 				addKeyTrack(track, songIndex);
 			} else {
 				$('#star'+songIndex).attr("src", "../images/star_empty.png");
-				window.console && console.log('key tracks: '+numKeyTracks-1);
 				// Call function to delete song from key tracks
 				var track = json[songIndex];
 				//console.log('track: '+);
@@ -530,11 +530,11 @@ if ( isset($_SESSION['success']) ) {
 		}
   	}
 
+	// FUNCTION: Add key track to key tracks list 
+	// Triggered in multiple functions that manipulate key tracks list 
   	function addKeyTrack(track) {
-		// TODO: Make trimmed track object with id, name, artist, album 
-		window.console && console.log(track);
-		keyTracks.push(track); // TODO: change push from id to object 
-		// Fetch track art - Local storage method
+		keyTracks.push(track);
+		// Fetch track art link 
 		var imageLink = track.image;
 		$( '#track-icon'+(numKeyTracks-1) ).attr('src', imageLink);
 		$( '#track-icon'+(numKeyTracks-1) ).attr('data-filled', '1');
@@ -542,18 +542,15 @@ if ( isset($_SESSION['success']) ) {
 		$( '#track-text'+(numKeyTracks-1) ).find('.track-artist').html(track.artist);
 	}
 
-
-	
+	// FUNCTION: Delete key track from key tracks list 
+	// Triggered in multiple functions that manipulate key tracks list 
 	function deleteKeyTrack(trackID) { 
 		// Find index within keyTracks and erase it 
 		var index = findKeyTrackIndex(trackID);
 		if (index != -1) {
-			//console.log('keyTracks: '+keyTracks);
-			//console.log('searching for '+trackID);
-			//window.console && console.log('Deleting key track at index '+index);
 			--numKeyTracks;
 			keyTracks.splice(index, 1);
-			// Move icons on the right of the deleted index to their new position 
+			// Shift all icons to the right of the deleted index left by 1 
 			var right = index + 1;
 			while (right <= numKeyTracks) {
 				$( '#track-icon'+ index ).attr('src', keyTracks[index].image );
@@ -563,6 +560,7 @@ if ( isset($_SESSION['success']) ) {
 				++index;
 				++right;
 			}
+			// Change last entry to placeholder 
 			$( '#track-icon'+ index ).attr('src', '../images/placeholder.jpg');
 			$( '#track-icon'+ index ).attr('data-filled', '0');
 			$( '#track-text'+ index ).find('.track-title').html( 'Select a key track below.' );
@@ -572,6 +570,8 @@ if ( isset($_SESSION['success']) ) {
 		}
 	}
 
+	// FUNCTION: Take track ID, search the key tracks list, and return the index of the track if it exists (-1 if it doesn't) 
+	// Triggered in deleteKeyTrack() 
 	function findKeyTrackIndex(trackID) {
 		for (var i = 0; i < keyTracks.length; ++i) {
 			if (keyTracks[i].trackID == trackID) {
@@ -581,6 +581,8 @@ if ( isset($_SESSION['success']) ) {
 		return -1;
 	}
 
+	// FUNCTION: Checks if a track is listed in the right column and is checked. Uncheck it if so 
+	// Triggered when a key track is deleted with the red X 
 	function checkForStar(trackID) {
 		for (var i = 0; i < json.length; ++i) {
 			if (json[i].trackID == trackID && $('#star'+i).attr('src') == "../images/star_filled.png") {
@@ -589,6 +591,8 @@ if ( isset($_SESSION['success']) ) {
 		}
 	}
 
+	// FUNCTION: Fill hidden form with song IDs and audio features, then submit the form
+	// Triggered when the Generate button is pressed 
 	function generatePlaylist() {
 		if (keyTracks.length == 0) {
 			alert('At least one key track must be selected to generate a new playlist.');
