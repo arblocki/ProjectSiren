@@ -8,6 +8,7 @@
 
 	session_start();
 	
+	// Login to API 
 	require_once "apiLogin.php";
 
 	// API READY 
@@ -18,14 +19,16 @@
 	$playlistTracks = $playlistTrackInfo->items;
 
 	// Initialize array of associative arrays
-	//		Each internal array will have strictly the data that we need
+	// Each internal array will have strictly the data that we need
 	$trackData = array();
 
 	foreach ($playlistTracks as $track) {
+		// If this song is saved on the user's computer only, skip it
 		if ($track->is_local) {
 			continue;
 		}
-
+		
+		// Push array of current track data into trackData array
 		$currentTrack = $track->track;
 		$trackData[] = array('track' => $currentTrack->name,
 								'trackID' => $currentTrack->id,
