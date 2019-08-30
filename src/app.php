@@ -177,32 +177,32 @@
 					<h5>Audio Features</h5>
 					<div class="feature-sliders">
 						<label for="acoustic">Acousticness</label>
-						<p class="feature-value" id="acoustic-value">50</p>
+						<p class="feature-value" id="acoustic-value">50%</p>
 						<input type="range" class="slide w-100" id="acoustic" min="0" max="100" step="0.1"
 						oninput="showVal(this.value, 'acoustic')" onchange="showVal(this.value, 'acoustic')">
 		  
 						<label for="dance">Danceability</label>
-						<p class="feature-value" id="dance-value">50</p>
+						<p class="feature-value" id="dance-value">50%</p>
 						<input type="range" class="slide w-100" id="dance" min="0" max="100" step="0.1"
 						oninput="showVal(this.value, 'dance')" onchange="showVal(this.value, 'dance')">
 
 						<label for="energy">Energy</label>
-						<p class="feature-value" id="energy-value">50</p>
+						<p class="feature-value" id="energy-value">50%</p>
 						<input type="range" class="slide w-100" id="energy" min="0" max="100" step="0.1"
 						oninput="showVal(this.value, 'energy')" onchange="showVal(this.value, 'energy')">
 
 						<label for="instrument">Instrumentalness</label>
-						<p class="feature-value" id="instrument-value">50</p>
+						<p class="feature-value" id="instrument-value">50%</p>
 						<input type="range" class="slide w-100" id="instrument" min="0" max="100" step="0.01"
 						oninput="showVal(this.value, 'instrument')" onchange="showVal(this.value, 'instrument')">
 
 						<label for="tempo">Tempo</label>
-						<p class="feature-value" id="tempo-value">135</p>
+						<p class="feature-value" id="tempo-value">135 BPM</p>
 						<input type="range" class="slide w-100" id="tempo" min="50" max="220" step="1"
-						oninput="showVal(this.value, 'tempo')" onchange="showVal(this.value, 'tempo')">
+						oninput="showBPM(this.value)" onchange="showBPM(this.value)">
 
 						<label for="valence">Valence</label>
-						<p class="feature-value" id="valence-value">50</p>
+						<p class="feature-value" id="valence-value">50%</p>
 						<input type="range" class="slide w-100" id="valence" min="0" max="100" step="0.1"
 						oninput="showVal(this.value, 'valence')" onchange="showVal(this.value, 'valence')">
 					</div>
@@ -412,10 +412,16 @@ if ( isset($_SESSION['success']) ) {
 	// Triggered in getTracks after response is handled 
 	function updateFeatures(json) {
 		audioFeatureTotals = [0, 0, 0, 0, 0, 0];
-
 		var completed = 0;
+		// If there are more than 20 songs, only look at the first 20.
+		// Adding more songs adds unnecessary requests and doesn't change averages much 
+		if (numSongs > 20) {
+			var numRequests = 20;
+		} else {
+			var numRequests = numSongs;
+		}
 		// Send request for each song and add the features to the running totals
-		for (var i = 0; i < numSongs; ++i) {
+		for (var i = 0; i < numRequests; ++i) {
 			var audioRequest = new XMLHttpRequest();
 			audioRequest.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
@@ -427,22 +433,22 @@ if ( isset($_SESSION['success']) ) {
 					audioFeatureTotals[3] += audioFeatures[3];
 					audioFeatureTotals[4] += audioFeatures[4];
 					audioFeatureTotals[5] += audioFeatures[5];
-
-					// Set numerical values to their new values
-					$('#acoustic-value').html( +((audioFeatureTotals[0] / completed) * 100).toFixed(6) );
-					$('#dance-value').html( +((audioFeatureTotals[1] / completed) * 100).toFixed(6) );
-					$('#energy-value').html( +((audioFeatureTotals[2] / completed) * 100).toFixed(6) );
-					$('#instrument-value').html( +((audioFeatureTotals[3] / completed) * 100).toFixed(6) );
-					$('#tempo-value').html( +(audioFeatureTotals[4] / completed).toFixed(6) );
-					$('#valence-value').html( +((audioFeatureTotals[5] / completed) * 100).toFixed(6) );
 					
 					// Set sliders to their new values
-					$('#acoustic').attr('value', $('#acoustic-value').html());
-					$('#dance').attr('value', $('#dance-value').html());
-					$('#energy').attr('value', $('#energy-value').html());
-					$('#instrument').attr('value', $('#instrument-value').html());
-					$('#tempo').attr('value', $('#tempo-value').html());
-					$('#valence').attr('value', $('#valence-value').html());
+					$('#acoustic').attr('value', +((audioFeatureTotals[0] / completed) * 100).toFixed(1) );
+					$('#dance').attr('value', +((audioFeatureTotals[1] / completed) * 100).toFixed(1) );
+					$('#energy').attr('value', +((audioFeatureTotals[2] / completed) * 100).toFixed(1) );
+					$('#instrument').attr('value', +((audioFeatureTotals[3] / completed) * 100).toFixed(1) );
+					$('#tempo').attr('value', +(audioFeatureTotals[4] / completed).toFixed(1) );
+					$('#valence').attr('value', +((audioFeatureTotals[5] / completed) * 100).toFixed(1) );
+
+					// Set numerical values to thier new values 
+					$('#acoustic-value').html( $('#acoustic').attr('value') + '%');
+					$('#dance-value').html( $('#dance').attr('value') + '%');
+					$('#energy-value').html( $('#energy').attr('value') + '%');
+					$('#instrument-value').html( $('#instrument').attr('value') + '%');
+					$('#tempo-value').html( $('#tempo').attr('value') + ' BPM');
+					$('#valence-value').html( $('#valence').attr('value') + '%');
 				}
 			};
 			audioRequest.open("GET", "getSongFeatures.php?id=" + json[i].trackID, true); 
@@ -455,7 +461,15 @@ if ( isset($_SESSION['success']) ) {
 	function showVal(newVal, featureName) {
 		var idName = '#' + featureName + '-value';
 		// DEBUG: window.console && console.log('updating '+idName+' to '+newVal);
-		$(idName).html(newVal);
+		$(idName).html(newVal + '%');
+	}
+
+	// FUNCTION: Update text to show slider value for tempo 
+	// Triggered when sliders are moved 
+	function showBPM(newVal) {
+		var idName = '#tempo-value';
+		// DEBUG: window.console && console.log('updating '+idName+' to '+newVal);
+		$(idName).html(newVal + ' BPM');
 	}
 	
 	// When document is ready: 

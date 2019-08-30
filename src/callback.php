@@ -54,6 +54,6 @@
 	// Store the id in SESSION and redirect to the app
 	session_start();
 	$_SESSION['id'] = $me->id;
-	header('Location: http://projectsiren.us-east-2.elasticbeanstalk.com/src/app.php');
+	header('Location: http://localhost/ProjectSiren/src/app.php');
 	die();
 	
