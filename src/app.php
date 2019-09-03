@@ -25,7 +25,7 @@
 		$_SESSION['dance'] = ($_POST['dance'] / 100);
 		$_SESSION['energy'] = ($_POST['energy'] / 100);
 		$_SESSION['instrument'] = ($_POST['instrument'] / 100);
-		$_SESSION['tempo'] = $_POST['tempo'];
+		$_SESSION['tempo'] = substr($_POST['tempo'], 0, -4);
 		$_SESSION['valence'] = ($_POST['valence'] / 100);
 	
 		// Redirect to recommendations page 
